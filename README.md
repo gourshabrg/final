@@ -111,6 +111,7 @@ flowchart LR
 ├── database/init/                  Warehouse tables, created on first start
 ├── data/samples/                   Sample CSV and JSON files
 ├── control-files/                  Sample control files (record_count)
+├── tests/e2e/run_scenarios.py      End-to-end scenario suite (whole platform)
 ├── docs/INTERVIEW_GUIDE.md         Detailed walkthrough of the design
 ├── docker-compose.yml
 └── .env.example                    Template for local settings
@@ -262,6 +263,8 @@ curl http://localhost:8080/api/v1/ingestions/<executionId>
 | `samples/employees.csv` | `employees_csv.properties` | `SUCCESS`, 20 of 20 loaded |
 | `samples/employees.json` | `employees_json.properties` | `SUCCESS`, 20 of 20 loaded |
 | `samples/employees_with_errors.csv` | `employees_with_errors.properties` | `FAILED`, 16 loaded, 4 errors, record count mismatch |
+| `samples/employees_large.csv` | `employees_large_csv.properties` | `SUCCESS`, 120 of 120 loaded (split into 3 files) |
+| `samples/employees_large.json` | `employees_large_json.properties` | `SUCCESS`, 120 of 120 loaded (split into 3 files) |
 
 Rejected records are written to `data/error/execution-<executionId>.txt` and to the `ingestion_error` table.
 
@@ -329,7 +332,7 @@ overridden with environment variables or `.env`.
 | Setting | Environment variable | Default |
 |---|---|---|
 | Encryption key (32 characters) | `LUMI_ENCRYPTION_KEY` | none, required |
-| Split threshold in bytes | `LUMI_FILE_SIZE_THRESHOLD_BYTES` | `1` (every file is split) |
+| Split threshold in bytes | `LUMI_FILE_SIZE_THRESHOLD_BYTES` | `100` (all sample files are split) |
 | Records per split file | `LUMI_RECORDS_PER_SPLIT_FILE` (Airflow) | `50` |
 | Local data folder | `LUMI_LOCAL_DATA_ROOT` | `../data` |
 | Local control-file folder | `LUMI_LOCAL_CONTROL_FILE_ROOT` | `../control-files` |
@@ -377,16 +380,38 @@ docker exec -it lumi-postgres psql -U airflow -d warehouse
 
 ## Testing
 
-153 automated tests. Database tests use the Docker warehouse and are **skipped** (not failed) when it is not running.
+154 automated tests plus an end-to-end scenario suite. Database tests use the Docker warehouse and are **skipped** (not failed) when it is not running.
 
 | Module | Tests | Command |
 |---|---|---|
 | Beam | 78 (7 against the database) | `cd beam-ingestion && ./mvnw test` |
 | Spring Boot | 52 (4 against the database) | `cd springboot-ingestion-service && ./mvnw test` |
-| Airflow DAG | 15 | `docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/airflow/tests -v` |
+| Airflow DAG | 16 | `docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/airflow/tests -v` |
 | PySpark | 8 | `docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/lumi/pyspark/tests -v` |
 
 On Windows use `.\mvnw.cmd test`. In Git Bash, prefix the `docker exec` commands with `MSYS_NO_PATHCONV=1`.
+
+### End-to-end scenarios
+
+`tests/e2e/run_scenarios.py` drives the real platform (API → Airflow → PySpark → Beam → PostgreSQL) and checks
+every result: run status, loaded and rejected rows, which DAG branch ran, number of split files, error file
+and decrypted values. It needs the running platform and only the Python standard library.
+
+```bash
+python tests/e2e/run_scenarios.py --expect split       # API threshold small (default): files are split
+python tests/e2e/run_scenarios.py --expect no-split    # API started with LUMI_FILE_SIZE_THRESHOLD_BYTES=10000000
+```
+
+| Scenario | Checks |
+|---|---|
+| CSV and JSON, 20 records | `SUCCESS`, 20 loaded |
+| CSV with 4 bad records | `FAILED` with record-count reason, 16 loaded, 4 error rows and error-file lines |
+| CSV and JSON, 120 records | `SUCCESS`, 120 loaded, 3 split files (50 per file), decrypted phone via the API |
+| Same CSV loaded again | `SUCCESS` (rows are updated, not duplicated) |
+| Control file with a non-numeric count (sent straight to Airflow) | Beam stops before loading, status `FAILED` with the reason |
+| Input file missing in the container (sent straight to Airflow) | `validate_request` fails, Beam never runs |
+
+Each mode runs 57 checks. Run a whole suite in about 10–15 minutes.
 
 ---
 

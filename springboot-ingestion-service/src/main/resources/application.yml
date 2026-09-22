@@ -20,7 +20,7 @@ lumi:
 
   ingestion:
     # Files bigger than this are split by PySpark first (Phase 2). 1 byte = always split.
-    file-size-threshold-bytes: ${LUMI_FILE_SIZE_THRESHOLD_BYTES:1}
+    file-size-threshold-bytes: ${LUMI_FILE_SIZE_THRESHOLD_BYTES:100}
     # Relative paths start from the folder the API is started in (springboot-ingestion-service).
     local-data-root: ${LUMI_LOCAL_DATA_ROOT:../data}
     local-control-file-root: ${LUMI_LOCAL_CONTROL_FILE_ROOT:../control-files}

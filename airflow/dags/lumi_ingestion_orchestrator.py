@@ -4,7 +4,7 @@ Lumi ingestion DAG, triggered by the Spring Boot API with the run details in dag
 log_request -> validate_request -> choose_split -> run_pyspark_split / skip_pyspark_split
             -> split_join -> run_beam_pipeline -> check_execution_status -> finalize
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -27,8 +27,12 @@ RUN_ENV = {
     "ERROR_OUTPUT": "{{ dag_run.conf['error_output'] }}",
 }
 
+# Retry short hiccups (e.g. a busy scheduler) instead of failing the whole ingestion.
+DEFAULT_ARGS = {"retries": 2, "retry_delay": timedelta(seconds=30)}
+
 with DAG(
     dag_id="lumi_ingestion_orchestrator",
+    default_args=DEFAULT_ARGS,
     description="Ingests CSV/JSON employee files into the warehouse",
     start_date=datetime(2026, 1, 1),
     schedule=None,  # Only runs when the API triggers it.
@@ -56,15 +60,18 @@ with DAG(
     # Runs after whichever branch was taken (the other one is skipped).
     split_join = EmptyOperator(task_id="split_join", trigger_rule=TriggerRule.NONE_FAILED_MIN_ONE_SUCCESS)
 
+    # No retry: a record-count mismatch would only fail again after reloading everything.
     run_beam_pipeline = BashOperator(
         task_id="run_beam_pipeline",
         bash_command=f"bash {SCRIPTS_DIR}/run_beam_pipeline.sh ",
         env=RUN_ENV,
         append_env=True,
+        retries=0,
     )
 
+    # No retry: the status in the database will not change on a second look.
     check_execution_status = PythonOperator(
-        task_id="check_execution_status", python_callable=tasks.check_execution_status
+        task_id="check_execution_status", python_callable=tasks.check_execution_status, retries=0
     )
 
     finalize = PythonOperator(task_id="finalize", python_callable=tasks.finalize)

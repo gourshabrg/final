@@ -52,6 +52,13 @@ class DagStructureTest(unittest.TestCase):
         dag = self.dag_bag.dags[DAG_ID]
         self.assertEqual("none_failed_min_one_success", dag.get_task("split_join").trigger_rule)
 
+    def test_safe_tasks_retry_and_final_steps_do_not(self):
+        dag = self.dag_bag.dags[DAG_ID]
+        self.assertEqual(2, dag.get_task("validate_request").retries)
+        self.assertEqual(2, dag.get_task("run_pyspark_split").retries)
+        self.assertEqual(0, dag.get_task("run_beam_pipeline").retries)
+        self.assertEqual(0, dag.get_task("check_execution_status").retries)
+
     def test_dag_only_runs_when_triggered(self):
         self.assertIsNone(self.dag_bag.dags[DAG_ID].schedule_interval)
 

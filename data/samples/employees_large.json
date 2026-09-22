@@ -1,0 +1,3842 @@
+[
+  {
+    "employee_id": "LGJ0001",
+    "first_name": "Vikram",
+    "last_name": "Nair",
+    "email": "vikram.nair1@lumi.com",
+    "phone_number": "9876500001",
+    "hire_date": "2015-12-02",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 960000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "1, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Nair",
+      "relationship": "Spouse",
+      "phone": "9123400001",
+      "email": "ec1@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0002",
+    "first_name": "Meera",
+    "last_name": "Mehta",
+    "email": "meera.mehta2@lumi.com",
+    "phone_number": "9876500002",
+    "hire_date": "2017-08-08",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1960000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Spark"
+    ],
+    "address": {
+      "street": "2, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400002",
+      "email": "ec2@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0003",
+    "first_name": "Rahul",
+    "last_name": "Iyer",
+    "email": "rahul.iyer3@lumi.com",
+    "phone_number": "9876500003",
+    "hire_date": "2023-06-18",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 970000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "3, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400003",
+      "email": "ec3@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0004",
+    "first_name": "Ravi",
+    "last_name": "Singh",
+    "email": "ravi.singh4@lumi.com",
+    "phone_number": "9876500004",
+    "hire_date": "2022-03-05",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python"
+    ],
+    "address": {
+      "street": "4, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Singh",
+      "relationship": "Spouse",
+      "phone": "9123400004",
+      "email": "ec4@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0005",
+    "first_name": "Priya",
+    "last_name": "Patel",
+    "email": "priya.patel5@lumi.com",
+    "phone_number": "9876500005",
+    "hire_date": "2019-07-26",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1070000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "AWS"
+    ],
+    "address": {
+      "street": "5, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Patel",
+      "relationship": "Spouse",
+      "phone": "9123400005",
+      "email": "ec5@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0006",
+    "first_name": "Rahul",
+    "last_name": "Nair",
+    "email": "rahul.nair6@lumi.com",
+    "phone_number": "9876500006",
+    "hire_date": "2023-12-16",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1030000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Spark"
+    ],
+    "address": {
+      "street": "6, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Nair",
+      "relationship": "Spouse",
+      "phone": "9123400006",
+      "email": "ec6@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0007",
+    "first_name": "Anita",
+    "last_name": "Sharma",
+    "email": "anita.sharma7@lumi.com",
+    "phone_number": "9876500007",
+    "hire_date": "2018-03-02",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2390000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "AWS"
+    ],
+    "address": {
+      "street": "7, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400007",
+      "email": "ec7@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0008",
+    "first_name": "Neha",
+    "last_name": "Gupta",
+    "email": "neha.gupta8@lumi.com",
+    "phone_number": "9876500008",
+    "hire_date": "2023-10-21",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1690000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Python"
+    ],
+    "address": {
+      "street": "8, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400008",
+      "email": "ec8@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0009",
+    "first_name": "Vikram",
+    "last_name": "Patel",
+    "email": "vikram.patel9@lumi.com",
+    "phone_number": "9876500009",
+    "hire_date": "2015-12-26",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1620000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Docker"
+    ],
+    "address": {
+      "street": "9, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Patel",
+      "relationship": "Spouse",
+      "phone": "9123400009",
+      "email": "ec9@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0010",
+    "first_name": "Karan",
+    "last_name": "Patel",
+    "email": "karan.patel10@lumi.com",
+    "phone_number": "9876500010",
+    "hire_date": "2018-02-09",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 990000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "SQL"
+    ],
+    "address": {
+      "street": "10, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Patel",
+      "relationship": "Spouse",
+      "phone": "9123400010",
+      "email": "ec10@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0011",
+    "first_name": "Arjun",
+    "last_name": "Rao",
+    "email": "arjun.rao11@lumi.com",
+    "phone_number": "9876500011",
+    "hire_date": "2023-05-10",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2040000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "AWS"
+    ],
+    "address": {
+      "street": "11, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Rao",
+      "relationship": "Spouse",
+      "phone": "9123400011",
+      "email": "ec11@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0012",
+    "first_name": "Ravi",
+    "last_name": "Rao",
+    "email": "ravi.rao12@lumi.com",
+    "phone_number": "9876500012",
+    "hire_date": "2018-03-24",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1230000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "12, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Rao",
+      "relationship": "Spouse",
+      "phone": "9123400012",
+      "email": "ec12@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0013",
+    "first_name": "Neha",
+    "last_name": "Khan",
+    "email": "neha.khan13@lumi.com",
+    "phone_number": "9876500013",
+    "hire_date": "2023-12-01",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 460000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python"
+    ],
+    "address": {
+      "street": "13, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Khan",
+      "relationship": "Spouse",
+      "phone": "9123400013",
+      "email": "ec13@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0014",
+    "first_name": "Vikram",
+    "last_name": "Singh",
+    "email": "vikram.singh14@lumi.com",
+    "phone_number": "9876500014",
+    "hire_date": "2024-02-19",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 830000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Spark"
+    ],
+    "address": {
+      "street": "14, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Singh",
+      "relationship": "Spouse",
+      "phone": "9123400014",
+      "email": "ec14@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0015",
+    "first_name": "Priya",
+    "last_name": "Nair",
+    "email": "priya.nair15@lumi.com",
+    "phone_number": "9876500015",
+    "hire_date": "2017-12-01",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 470000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "15, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Nair",
+      "relationship": "Spouse",
+      "phone": "9123400015",
+      "email": "ec15@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0016",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel16@lumi.com",
+    "phone_number": "9876500016",
+    "hire_date": "2023-11-03",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2330000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Python"
+    ],
+    "address": {
+      "street": "16, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Patel",
+      "relationship": "Spouse",
+      "phone": "9123400016",
+      "email": "ec16@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0017",
+    "first_name": "Neha",
+    "last_name": "Patel",
+    "email": "neha.patel17@lumi.com",
+    "phone_number": "9876500017",
+    "hire_date": "2025-02-27",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2320000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Java"
+    ],
+    "address": {
+      "street": "17, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Patel",
+      "relationship": "Spouse",
+      "phone": "9123400017",
+      "email": "ec17@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0018",
+    "first_name": "Priya",
+    "last_name": "Singh",
+    "email": "priya.singh18@lumi.com",
+    "phone_number": "9876500018",
+    "hire_date": "2020-07-09",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 450000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Spark"
+    ],
+    "address": {
+      "street": "18, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Singh",
+      "relationship": "Spouse",
+      "phone": "9123400018",
+      "email": "ec18@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0019",
+    "first_name": "Sara",
+    "last_name": "Iyer",
+    "email": "sara.iyer19@lumi.com",
+    "phone_number": "9876500019",
+    "hire_date": "2024-12-01",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2410000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Docker"
+    ],
+    "address": {
+      "street": "19, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400019",
+      "email": "ec19@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0020",
+    "first_name": "Priya",
+    "last_name": "Iyer",
+    "email": "priya.iyer20@lumi.com",
+    "phone_number": "9876500020",
+    "hire_date": "2015-09-19",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 950000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "20, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400020",
+      "email": "ec20@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0021",
+    "first_name": "Meera",
+    "last_name": "Sharma",
+    "email": "meera.sharma21@lumi.com",
+    "phone_number": "9876500021",
+    "hire_date": "2015-01-12",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1650000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "21, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400021",
+      "email": "ec21@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0022",
+    "first_name": "Rahul",
+    "last_name": "Iyer",
+    "email": "rahul.iyer22@lumi.com",
+    "phone_number": "9876500022",
+    "hire_date": "2017-05-27",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 940000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "22, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400022",
+      "email": "ec22@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0023",
+    "first_name": "Priya",
+    "last_name": "Das",
+    "email": "priya.das23@lumi.com",
+    "phone_number": "9876500023",
+    "hire_date": "2020-06-04",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1420000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "23, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Das",
+      "relationship": "Spouse",
+      "phone": "9123400023",
+      "email": "ec23@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0024",
+    "first_name": "Arjun",
+    "last_name": "Iyer",
+    "email": "arjun.iyer24@lumi.com",
+    "phone_number": "9876500024",
+    "hire_date": "2019-07-18",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1680000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "24, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400024",
+      "email": "ec24@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0025",
+    "first_name": "Ravi",
+    "last_name": "Mehta",
+    "email": "ravi.mehta25@lumi.com",
+    "phone_number": "9876500025",
+    "hire_date": "2024-06-17",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 790000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "AWS"
+    ],
+    "address": {
+      "street": "25, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400025",
+      "email": "ec25@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0026",
+    "first_name": "Ravi",
+    "last_name": "Das",
+    "email": "ravi.das26@lumi.com",
+    "phone_number": "9876500026",
+    "hire_date": "2019-10-08",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 720000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "26, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Das",
+      "relationship": "Spouse",
+      "phone": "9123400026",
+      "email": "ec26@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0027",
+    "first_name": "Neha",
+    "last_name": "Rao",
+    "email": "neha.rao27@lumi.com",
+    "phone_number": "9876500027",
+    "hire_date": "2024-03-24",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 790000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "SQL"
+    ],
+    "address": {
+      "street": "27, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Rao",
+      "relationship": "Spouse",
+      "phone": "9123400027",
+      "email": "ec27@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0028",
+    "first_name": "Anita",
+    "last_name": "Iyer",
+    "email": "anita.iyer28@lumi.com",
+    "phone_number": "9876500028",
+    "hire_date": "2020-04-09",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2260000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "28, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400028",
+      "email": "ec28@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0029",
+    "first_name": "Meera",
+    "last_name": "Gupta",
+    "email": "meera.gupta29@lumi.com",
+    "phone_number": "9876500029",
+    "hire_date": "2019-07-09",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 900000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "29, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400029",
+      "email": "ec29@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0030",
+    "first_name": "Neha",
+    "last_name": "Khan",
+    "email": "neha.khan30@lumi.com",
+    "phone_number": "9876500030",
+    "hire_date": "2015-07-28",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2420000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python"
+    ],
+    "address": {
+      "street": "30, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Khan",
+      "relationship": "Spouse",
+      "phone": "9123400030",
+      "email": "ec30@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0031",
+    "first_name": "Vikram",
+    "last_name": "Das",
+    "email": "vikram.das31@lumi.com",
+    "phone_number": "9876500031",
+    "hire_date": "2019-10-24",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python"
+    ],
+    "address": {
+      "street": "31, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Das",
+      "relationship": "Spouse",
+      "phone": "9123400031",
+      "email": "ec31@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0032",
+    "first_name": "Rahul",
+    "last_name": "Nair",
+    "email": "rahul.nair32@lumi.com",
+    "phone_number": "9876500032",
+    "hire_date": "2025-12-21",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2380000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python"
+    ],
+    "address": {
+      "street": "32, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Nair",
+      "relationship": "Spouse",
+      "phone": "9123400032",
+      "email": "ec32@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0033",
+    "first_name": "Karan",
+    "last_name": "Khan",
+    "email": "karan.khan33@lumi.com",
+    "phone_number": "9876500033",
+    "hire_date": "2025-12-04",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1470000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "33, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Khan",
+      "relationship": "Spouse",
+      "phone": "9123400033",
+      "email": "ec33@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0034",
+    "first_name": "Meera",
+    "last_name": "Das",
+    "email": "meera.das34@lumi.com",
+    "phone_number": "9876500034",
+    "hire_date": "2024-07-17",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2120000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "SQL"
+    ],
+    "address": {
+      "street": "34, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Das",
+      "relationship": "Spouse",
+      "phone": "9123400034",
+      "email": "ec34@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0035",
+    "first_name": "Meera",
+    "last_name": "Das",
+    "email": "meera.das35@lumi.com",
+    "phone_number": "9876500035",
+    "hire_date": "2019-09-07",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 810000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "35, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Das",
+      "relationship": "Spouse",
+      "phone": "9123400035",
+      "email": "ec35@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0036",
+    "first_name": "Rahul",
+    "last_name": "Das",
+    "email": "rahul.das36@lumi.com",
+    "phone_number": "9876500036",
+    "hire_date": "2022-09-01",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2030000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "36, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Das",
+      "relationship": "Spouse",
+      "phone": "9123400036",
+      "email": "ec36@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0037",
+    "first_name": "Karan",
+    "last_name": "Singh",
+    "email": "karan.singh37@lumi.com",
+    "phone_number": "9876500037",
+    "hire_date": "2023-02-24",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1970000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "37, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Singh",
+      "relationship": "Spouse",
+      "phone": "9123400037",
+      "email": "ec37@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0038",
+    "first_name": "Vikram",
+    "last_name": "Khan",
+    "email": "vikram.khan38@lumi.com",
+    "phone_number": "9876500038",
+    "hire_date": "2015-02-14",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1470000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "38, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Khan",
+      "relationship": "Spouse",
+      "phone": "9123400038",
+      "email": "ec38@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0039",
+    "first_name": "Neha",
+    "last_name": "Rao",
+    "email": "neha.rao39@lumi.com",
+    "phone_number": "9876500039",
+    "hire_date": "2018-07-15",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 940000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "39, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Rao",
+      "relationship": "Spouse",
+      "phone": "9123400039",
+      "email": "ec39@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0040",
+    "first_name": "Karan",
+    "last_name": "Mehta",
+    "email": "karan.mehta40@lumi.com",
+    "phone_number": "9876500040",
+    "hire_date": "2020-11-21",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2490000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "40, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400040",
+      "email": "ec40@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0041",
+    "first_name": "Ravi",
+    "last_name": "Das",
+    "email": "ravi.das41@lumi.com",
+    "phone_number": "9876500041",
+    "hire_date": "2019-12-13",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2150000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "41, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Das",
+      "relationship": "Spouse",
+      "phone": "9123400041",
+      "email": "ec41@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0042",
+    "first_name": "Arjun",
+    "last_name": "Rao",
+    "email": "arjun.rao42@lumi.com",
+    "phone_number": "9876500042",
+    "hire_date": "2025-05-11",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1620000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS"
+    ],
+    "address": {
+      "street": "42, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Rao",
+      "relationship": "Spouse",
+      "phone": "9123400042",
+      "email": "ec42@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0043",
+    "first_name": "Sara",
+    "last_name": "Gupta",
+    "email": "sara.gupta43@lumi.com",
+    "phone_number": "9876500043",
+    "hire_date": "2015-02-27",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1840000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "AWS"
+    ],
+    "address": {
+      "street": "43, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400043",
+      "email": "ec43@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0044",
+    "first_name": "Rahul",
+    "last_name": "Sharma",
+    "email": "rahul.sharma44@lumi.com",
+    "phone_number": "9876500044",
+    "hire_date": "2016-11-10",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1040000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Python"
+    ],
+    "address": {
+      "street": "44, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400044",
+      "email": "ec44@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0045",
+    "first_name": "Ravi",
+    "last_name": "Das",
+    "email": "ravi.das45@lumi.com",
+    "phone_number": "9876500045",
+    "hire_date": "2018-07-26",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1760000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "45, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Das",
+      "relationship": "Spouse",
+      "phone": "9123400045",
+      "email": "ec45@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0046",
+    "first_name": "Anita",
+    "last_name": "Rao",
+    "email": "anita.rao46@lumi.com",
+    "phone_number": "9876500046",
+    "hire_date": "2018-09-03",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2290000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "46, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Rao",
+      "relationship": "Spouse",
+      "phone": "9123400046",
+      "email": "ec46@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0047",
+    "first_name": "Priya",
+    "last_name": "Rao",
+    "email": "priya.rao47@lumi.com",
+    "phone_number": "9876500047",
+    "hire_date": "2017-08-16",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Spark"
+    ],
+    "address": {
+      "street": "47, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Rao",
+      "relationship": "Spouse",
+      "phone": "9123400047",
+      "email": "ec47@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0048",
+    "first_name": "Karan",
+    "last_name": "Singh",
+    "email": "karan.singh48@lumi.com",
+    "phone_number": "9876500048",
+    "hire_date": "2023-10-28",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2280000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "address": {
+      "street": "48, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Singh",
+      "relationship": "Spouse",
+      "phone": "9123400048",
+      "email": "ec48@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0049",
+    "first_name": "Rahul",
+    "last_name": "Das",
+    "email": "rahul.das49@lumi.com",
+    "phone_number": "9876500049",
+    "hire_date": "2020-07-14",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2130000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "address": {
+      "street": "49, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Das",
+      "relationship": "Spouse",
+      "phone": "9123400049",
+      "email": "ec49@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0050",
+    "first_name": "Arjun",
+    "last_name": "Nair",
+    "email": "arjun.nair50@lumi.com",
+    "phone_number": "9876500050",
+    "hire_date": "2020-02-17",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1630000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "50, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Nair",
+      "relationship": "Spouse",
+      "phone": "9123400050",
+      "email": "ec50@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0051",
+    "first_name": "Meera",
+    "last_name": "Gupta",
+    "email": "meera.gupta51@lumi.com",
+    "phone_number": "9876500051",
+    "hire_date": "2025-06-11",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1610000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Python"
+    ],
+    "address": {
+      "street": "51, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400051",
+      "email": "ec51@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0052",
+    "first_name": "Meera",
+    "last_name": "Iyer",
+    "email": "meera.iyer52@lumi.com",
+    "phone_number": "9876500052",
+    "hire_date": "2023-01-27",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1140000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Docker"
+    ],
+    "address": {
+      "street": "52, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400052",
+      "email": "ec52@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0053",
+    "first_name": "Sara",
+    "last_name": "Mehta",
+    "email": "sara.mehta53@lumi.com",
+    "phone_number": "9876500053",
+    "hire_date": "2020-04-21",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1660000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Python"
+    ],
+    "address": {
+      "street": "53, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400053",
+      "email": "ec53@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0054",
+    "first_name": "Vikram",
+    "last_name": "Gupta",
+    "email": "vikram.gupta54@lumi.com",
+    "phone_number": "9876500054",
+    "hire_date": "2021-12-18",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Java"
+    ],
+    "address": {
+      "street": "54, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400054",
+      "email": "ec54@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0055",
+    "first_name": "Vikram",
+    "last_name": "Patel",
+    "email": "vikram.patel55@lumi.com",
+    "phone_number": "9876500055",
+    "hire_date": "2018-08-20",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2360000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "55, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Patel",
+      "relationship": "Spouse",
+      "phone": "9123400055",
+      "email": "ec55@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0056",
+    "first_name": "Meera",
+    "last_name": "Nair",
+    "email": "meera.nair56@lumi.com",
+    "phone_number": "9876500056",
+    "hire_date": "2025-12-23",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1920000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "56, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Nair",
+      "relationship": "Spouse",
+      "phone": "9123400056",
+      "email": "ec56@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0057",
+    "first_name": "Ravi",
+    "last_name": "Patel",
+    "email": "ravi.patel57@lumi.com",
+    "phone_number": "9876500057",
+    "hire_date": "2021-02-21",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "address": {
+      "street": "57, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Patel",
+      "relationship": "Spouse",
+      "phone": "9123400057",
+      "email": "ec57@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0058",
+    "first_name": "Vikram",
+    "last_name": "Rao",
+    "email": "vikram.rao58@lumi.com",
+    "phone_number": "9876500058",
+    "hire_date": "2015-06-01",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1500000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS"
+    ],
+    "address": {
+      "street": "58, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Rao",
+      "relationship": "Spouse",
+      "phone": "9123400058",
+      "email": "ec58@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0059",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel59@lumi.com",
+    "phone_number": "9876500059",
+    "hire_date": "2021-08-03",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "59, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Patel",
+      "relationship": "Spouse",
+      "phone": "9123400059",
+      "email": "ec59@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0060",
+    "first_name": "Karan",
+    "last_name": "Khan",
+    "email": "karan.khan60@lumi.com",
+    "phone_number": "9876500060",
+    "hire_date": "2025-08-07",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 780000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Java"
+    ],
+    "address": {
+      "street": "60, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Khan",
+      "relationship": "Spouse",
+      "phone": "9123400060",
+      "email": "ec60@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0061",
+    "first_name": "Priya",
+    "last_name": "Patel",
+    "email": "priya.patel61@lumi.com",
+    "phone_number": "9876500061",
+    "hire_date": "2017-08-01",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1100000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "61, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Patel",
+      "relationship": "Spouse",
+      "phone": "9123400061",
+      "email": "ec61@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0062",
+    "first_name": "Sara",
+    "last_name": "Gupta",
+    "email": "sara.gupta62@lumi.com",
+    "phone_number": "9876500062",
+    "hire_date": "2025-09-23",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1670000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "SQL"
+    ],
+    "address": {
+      "street": "62, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400062",
+      "email": "ec62@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0063",
+    "first_name": "Arjun",
+    "last_name": "Sharma",
+    "email": "arjun.sharma63@lumi.com",
+    "phone_number": "9876500063",
+    "hire_date": "2025-11-27",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1980000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "63, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400063",
+      "email": "ec63@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0064",
+    "first_name": "Rahul",
+    "last_name": "Gupta",
+    "email": "rahul.gupta64@lumi.com",
+    "phone_number": "9876500064",
+    "hire_date": "2015-06-12",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1870000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "64, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400064",
+      "email": "ec64@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0065",
+    "first_name": "Priya",
+    "last_name": "Iyer",
+    "email": "priya.iyer65@lumi.com",
+    "phone_number": "9876500065",
+    "hire_date": "2021-08-13",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2390000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "65, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400065",
+      "email": "ec65@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0066",
+    "first_name": "Vikram",
+    "last_name": "Rao",
+    "email": "vikram.rao66@lumi.com",
+    "phone_number": "9876500066",
+    "hire_date": "2025-12-26",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1930000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Java"
+    ],
+    "address": {
+      "street": "66, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Rao",
+      "relationship": "Spouse",
+      "phone": "9123400066",
+      "email": "ec66@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0067",
+    "first_name": "Rahul",
+    "last_name": "Rao",
+    "email": "rahul.rao67@lumi.com",
+    "phone_number": "9876500067",
+    "hire_date": "2021-07-22",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1360000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "67, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Rao",
+      "relationship": "Spouse",
+      "phone": "9123400067",
+      "email": "ec67@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0068",
+    "first_name": "Sara",
+    "last_name": "Rao",
+    "email": "sara.rao68@lumi.com",
+    "phone_number": "9876500068",
+    "hire_date": "2017-10-27",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2350000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Python"
+    ],
+    "address": {
+      "street": "68, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Rao",
+      "relationship": "Spouse",
+      "phone": "9123400068",
+      "email": "ec68@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0069",
+    "first_name": "Ravi",
+    "last_name": "Rao",
+    "email": "ravi.rao69@lumi.com",
+    "phone_number": "9876500069",
+    "hire_date": "2023-02-18",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1810000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python"
+    ],
+    "address": {
+      "street": "69, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Rao",
+      "relationship": "Spouse",
+      "phone": "9123400069",
+      "email": "ec69@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0070",
+    "first_name": "Vikram",
+    "last_name": "Nair",
+    "email": "vikram.nair70@lumi.com",
+    "phone_number": "9876500070",
+    "hire_date": "2021-08-23",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 920000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Java"
+    ],
+    "address": {
+      "street": "70, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Nair",
+      "relationship": "Spouse",
+      "phone": "9123400070",
+      "email": "ec70@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0071",
+    "first_name": "Karan",
+    "last_name": "Mehta",
+    "email": "karan.mehta71@lumi.com",
+    "phone_number": "9876500071",
+    "hire_date": "2020-02-08",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1410000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "71, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400071",
+      "email": "ec71@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0072",
+    "first_name": "Karan",
+    "last_name": "Mehta",
+    "email": "karan.mehta72@lumi.com",
+    "phone_number": "9876500072",
+    "hire_date": "2018-04-03",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 860000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "72, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400072",
+      "email": "ec72@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0073",
+    "first_name": "Sara",
+    "last_name": "Khan",
+    "email": "sara.khan73@lumi.com",
+    "phone_number": "9876500073",
+    "hire_date": "2015-08-12",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 670000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Docker"
+    ],
+    "address": {
+      "street": "73, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Khan",
+      "relationship": "Spouse",
+      "phone": "9123400073",
+      "email": "ec73@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0074",
+    "first_name": "Ravi",
+    "last_name": "Iyer",
+    "email": "ravi.iyer74@lumi.com",
+    "phone_number": "9876500074",
+    "hire_date": "2019-09-20",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 450000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Python"
+    ],
+    "address": {
+      "street": "74, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400074",
+      "email": "ec74@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0075",
+    "first_name": "Karan",
+    "last_name": "Nair",
+    "email": "karan.nair75@lumi.com",
+    "phone_number": "9876500075",
+    "hire_date": "2019-07-04",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1540000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "75, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Nair",
+      "relationship": "Spouse",
+      "phone": "9123400075",
+      "email": "ec75@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0076",
+    "first_name": "Neha",
+    "last_name": "Gupta",
+    "email": "neha.gupta76@lumi.com",
+    "phone_number": "9876500076",
+    "hire_date": "2015-01-02",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Docker"
+    ],
+    "address": {
+      "street": "76, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400076",
+      "email": "ec76@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0077",
+    "first_name": "Priya",
+    "last_name": "Nair",
+    "email": "priya.nair77@lumi.com",
+    "phone_number": "9876500077",
+    "hire_date": "2016-05-11",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1840000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "77, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Nair",
+      "relationship": "Spouse",
+      "phone": "9123400077",
+      "email": "ec77@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0078",
+    "first_name": "Meera",
+    "last_name": "Gupta",
+    "email": "meera.gupta78@lumi.com",
+    "phone_number": "9876500078",
+    "hire_date": "2020-04-24",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 960000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "SQL"
+    ],
+    "address": {
+      "street": "78, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400078",
+      "email": "ec78@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0079",
+    "first_name": "Arjun",
+    "last_name": "Mehta",
+    "email": "arjun.mehta79@lumi.com",
+    "phone_number": "9876500079",
+    "hire_date": "2019-09-23",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2290000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Spark"
+    ],
+    "address": {
+      "street": "79, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400079",
+      "email": "ec79@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0080",
+    "first_name": "Sara",
+    "last_name": "Sharma",
+    "email": "sara.sharma80@lumi.com",
+    "phone_number": "9876500080",
+    "hire_date": "2019-10-19",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1520000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "80, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400080",
+      "email": "ec80@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0081",
+    "first_name": "Vikram",
+    "last_name": "Khan",
+    "email": "vikram.khan81@lumi.com",
+    "phone_number": "9876500081",
+    "hire_date": "2022-07-06",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1520000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "81, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Khan",
+      "relationship": "Spouse",
+      "phone": "9123400081",
+      "email": "ec81@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0082",
+    "first_name": "Neha",
+    "last_name": "Sharma",
+    "email": "neha.sharma82@lumi.com",
+    "phone_number": "9876500082",
+    "hire_date": "2016-10-28",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1350000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Java"
+    ],
+    "address": {
+      "street": "82, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400082",
+      "email": "ec82@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0083",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel83@lumi.com",
+    "phone_number": "9876500083",
+    "hire_date": "2020-04-16",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 690000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "address": {
+      "street": "83, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Patel",
+      "relationship": "Spouse",
+      "phone": "9123400083",
+      "email": "ec83@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0084",
+    "first_name": "Arjun",
+    "last_name": "Gupta",
+    "email": "arjun.gupta84@lumi.com",
+    "phone_number": "9876500084",
+    "hire_date": "2017-08-28",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 780000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Spark"
+    ],
+    "address": {
+      "street": "84, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400084",
+      "email": "ec84@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0085",
+    "first_name": "Ravi",
+    "last_name": "Sharma",
+    "email": "ravi.sharma85@lumi.com",
+    "phone_number": "9876500085",
+    "hire_date": "2019-06-26",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Java"
+    ],
+    "address": {
+      "street": "85, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400085",
+      "email": "ec85@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0086",
+    "first_name": "Karan",
+    "last_name": "Das",
+    "email": "karan.das86@lumi.com",
+    "phone_number": "9876500086",
+    "hire_date": "2023-01-21",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2410000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Docker"
+    ],
+    "address": {
+      "street": "86, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Das",
+      "relationship": "Spouse",
+      "phone": "9123400086",
+      "email": "ec86@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0087",
+    "first_name": "Priya",
+    "last_name": "Rao",
+    "email": "priya.rao87@lumi.com",
+    "phone_number": "9876500087",
+    "hire_date": "2021-05-08",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1000000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "87, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Rao",
+      "relationship": "Spouse",
+      "phone": "9123400087",
+      "email": "ec87@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0088",
+    "first_name": "Ravi",
+    "last_name": "Sharma",
+    "email": "ravi.sharma88@lumi.com",
+    "phone_number": "9876500088",
+    "hire_date": "2025-01-15",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2460000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "88, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400088",
+      "email": "ec88@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0089",
+    "first_name": "Karan",
+    "last_name": "Sharma",
+    "email": "karan.sharma89@lumi.com",
+    "phone_number": "9876500089",
+    "hire_date": "2020-07-02",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1440000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "AWS"
+    ],
+    "address": {
+      "street": "89, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400089",
+      "email": "ec89@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0090",
+    "first_name": "Ravi",
+    "last_name": "Gupta",
+    "email": "ravi.gupta90@lumi.com",
+    "phone_number": "9876500090",
+    "hire_date": "2017-04-20",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 600000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Docker"
+    ],
+    "address": {
+      "street": "90, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400090",
+      "email": "ec90@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0091",
+    "first_name": "Ravi",
+    "last_name": "Singh",
+    "email": "ravi.singh91@lumi.com",
+    "phone_number": "9876500091",
+    "hire_date": "2025-12-21",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2470000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "91, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Singh",
+      "relationship": "Spouse",
+      "phone": "9123400091",
+      "email": "ec91@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0092",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel92@lumi.com",
+    "phone_number": "9876500092",
+    "hire_date": "2015-09-26",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1280000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Docker"
+    ],
+    "address": {
+      "street": "92, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Patel",
+      "relationship": "Spouse",
+      "phone": "9123400092",
+      "email": "ec92@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0093",
+    "first_name": "Arjun",
+    "last_name": "Khan",
+    "email": "arjun.khan93@lumi.com",
+    "phone_number": "9876500093",
+    "hire_date": "2025-05-08",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 870000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Python"
+    ],
+    "address": {
+      "street": "93, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Khan",
+      "relationship": "Spouse",
+      "phone": "9123400093",
+      "email": "ec93@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0094",
+    "first_name": "Rahul",
+    "last_name": "Nair",
+    "email": "rahul.nair94@lumi.com",
+    "phone_number": "9876500094",
+    "hire_date": "2023-08-17",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 580000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Python"
+    ],
+    "address": {
+      "street": "94, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Nair",
+      "relationship": "Spouse",
+      "phone": "9123400094",
+      "email": "ec94@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0095",
+    "first_name": "Meera",
+    "last_name": "Nair",
+    "email": "meera.nair95@lumi.com",
+    "phone_number": "9876500095",
+    "hire_date": "2016-12-16",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1540000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "AWS"
+    ],
+    "address": {
+      "street": "95, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Nair",
+      "relationship": "Spouse",
+      "phone": "9123400095",
+      "email": "ec95@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0096",
+    "first_name": "Ravi",
+    "last_name": "Sharma",
+    "email": "ravi.sharma96@lumi.com",
+    "phone_number": "9876500096",
+    "hire_date": "2018-10-06",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Spark"
+    ],
+    "address": {
+      "street": "96, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400096",
+      "email": "ec96@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0097",
+    "first_name": "Arjun",
+    "last_name": "Sharma",
+    "email": "arjun.sharma97@lumi.com",
+    "phone_number": "9876500097",
+    "hire_date": "2018-05-01",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1930000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Python"
+    ],
+    "address": {
+      "street": "97, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400097",
+      "email": "ec97@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0098",
+    "first_name": "Priya",
+    "last_name": "Iyer",
+    "email": "priya.iyer98@lumi.com",
+    "phone_number": "9876500098",
+    "hire_date": "2017-01-09",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 710000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS"
+    ],
+    "address": {
+      "street": "98, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400098",
+      "email": "ec98@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0099",
+    "first_name": "Vikram",
+    "last_name": "Patel",
+    "email": "vikram.patel99@lumi.com",
+    "phone_number": "9876500099",
+    "hire_date": "2021-03-18",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1910000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Spark"
+    ],
+    "address": {
+      "street": "99, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Patel",
+      "relationship": "Spouse",
+      "phone": "9123400099",
+      "email": "ec99@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0100",
+    "first_name": "Karan",
+    "last_name": "Khan",
+    "email": "karan.khan100@lumi.com",
+    "phone_number": "9876500100",
+    "hire_date": "2025-07-23",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1470000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "Docker"
+    ],
+    "address": {
+      "street": "100, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Khan",
+      "relationship": "Spouse",
+      "phone": "9123400100",
+      "email": "ec100@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0101",
+    "first_name": "Sara",
+    "last_name": "Iyer",
+    "email": "sara.iyer101@lumi.com",
+    "phone_number": "9876500101",
+    "hire_date": "2020-12-14",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1840000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS"
+    ],
+    "address": {
+      "street": "101, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400101",
+      "email": "ec101@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0102",
+    "first_name": "Sara",
+    "last_name": "Mehta",
+    "email": "sara.mehta102@lumi.com",
+    "phone_number": "9876500102",
+    "hire_date": "2020-04-28",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1480000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "102, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400102",
+      "email": "ec102@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0103",
+    "first_name": "Ravi",
+    "last_name": "Patel",
+    "email": "ravi.patel103@lumi.com",
+    "phone_number": "9876500103",
+    "hire_date": "2018-09-22",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 450000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Docker"
+    ],
+    "address": {
+      "street": "103, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Patel",
+      "relationship": "Spouse",
+      "phone": "9123400103",
+      "email": "ec103@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0104",
+    "first_name": "Karan",
+    "last_name": "Sharma",
+    "email": "karan.sharma104@lumi.com",
+    "phone_number": "9876500104",
+    "hire_date": "2025-10-09",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2130000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "AWS"
+    ],
+    "address": {
+      "street": "104, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400104",
+      "email": "ec104@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0105",
+    "first_name": "Rahul",
+    "last_name": "Patel",
+    "email": "rahul.patel105@lumi.com",
+    "phone_number": "9876500105",
+    "hire_date": "2023-01-14",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1000000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "105, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Patel",
+      "relationship": "Spouse",
+      "phone": "9123400105",
+      "email": "ec105@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0106",
+    "first_name": "Sara",
+    "last_name": "Gupta",
+    "email": "sara.gupta106@lumi.com",
+    "phone_number": "9876500106",
+    "hire_date": "2024-09-09",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 610000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "106, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Gupta",
+      "relationship": "Spouse",
+      "phone": "9123400106",
+      "email": "ec106@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0107",
+    "first_name": "Karan",
+    "last_name": "Patel",
+    "email": "karan.patel107@lumi.com",
+    "phone_number": "9876500107",
+    "hire_date": "2021-10-10",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1100000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "107, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Patel",
+      "relationship": "Spouse",
+      "phone": "9123400107",
+      "email": "ec107@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0108",
+    "first_name": "Vikram",
+    "last_name": "Das",
+    "email": "vikram.das108@lumi.com",
+    "phone_number": "9876500108",
+    "hire_date": "2021-04-18",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2210000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS"
+    ],
+    "address": {
+      "street": "108, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Das",
+      "relationship": "Spouse",
+      "phone": "9123400108",
+      "email": "ec108@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0109",
+    "first_name": "Rahul",
+    "last_name": "Das",
+    "email": "rahul.das109@lumi.com",
+    "phone_number": "9876500109",
+    "hire_date": "2015-04-11",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 960000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "109, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Das",
+      "relationship": "Spouse",
+      "phone": "9123400109",
+      "email": "ec109@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0110",
+    "first_name": "Rahul",
+    "last_name": "Khan",
+    "email": "rahul.khan110@lumi.com",
+    "phone_number": "9876500110",
+    "hire_date": "2017-04-11",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "110, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Khan",
+      "relationship": "Spouse",
+      "phone": "9123400110",
+      "email": "ec110@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0111",
+    "first_name": "Neha",
+    "last_name": "Rao",
+    "email": "neha.rao111@lumi.com",
+    "phone_number": "9876500111",
+    "hire_date": "2017-09-03",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1950000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Java"
+    ],
+    "address": {
+      "street": "111, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Rao",
+      "relationship": "Spouse",
+      "phone": "9123400111",
+      "email": "ec111@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0112",
+    "first_name": "Meera",
+    "last_name": "Das",
+    "email": "meera.das112@lumi.com",
+    "phone_number": "9876500112",
+    "hire_date": "2016-09-08",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2130000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "112, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Das",
+      "relationship": "Spouse",
+      "phone": "9123400112",
+      "email": "ec112@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0113",
+    "first_name": "Ravi",
+    "last_name": "Singh",
+    "email": "ravi.singh113@lumi.com",
+    "phone_number": "9876500113",
+    "hire_date": "2016-12-28",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 2300000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Python"
+    ],
+    "address": {
+      "street": "113, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Singh",
+      "relationship": "Spouse",
+      "phone": "9123400113",
+      "email": "ec113@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0114",
+    "first_name": "Priya",
+    "last_name": "Sharma",
+    "email": "priya.sharma114@lumi.com",
+    "phone_number": "9876500114",
+    "hire_date": "2024-02-16",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1410000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0003",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "114, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400114",
+      "email": "ec114@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0115",
+    "first_name": "Rahul",
+    "last_name": "Patel",
+    "email": "rahul.patel115@lumi.com",
+    "phone_number": "9876500115",
+    "hire_date": "2022-05-24",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1300000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Docker"
+    ],
+    "address": {
+      "street": "115, MG Road",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Patel",
+      "relationship": "Spouse",
+      "phone": "9123400115",
+      "email": "ec115@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0116",
+    "first_name": "Anita",
+    "last_name": "Nair",
+    "email": "anita.nair116@lumi.com",
+    "phone_number": "9876500116",
+    "hire_date": "2020-01-26",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2300000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0008",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Spark"
+    ],
+    "address": {
+      "street": "116, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Nair",
+      "relationship": "Spouse",
+      "phone": "9123400116",
+      "email": "ec116@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0117",
+    "first_name": "Ravi",
+    "last_name": "Mehta",
+    "email": "ravi.mehta117@lumi.com",
+    "phone_number": "9876500117",
+    "hire_date": "2021-10-13",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1880000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Java",
+      "SQL"
+    ],
+    "address": {
+      "street": "117, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400117",
+      "email": "ec117@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0118",
+    "first_name": "Rahul",
+    "last_name": "Singh",
+    "email": "rahul.singh118@lumi.com",
+    "phone_number": "9876500118",
+    "hire_date": "2021-01-01",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 520000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Docker"
+    ],
+    "address": {
+      "street": "118, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Singh",
+      "relationship": "Spouse",
+      "phone": "9123400118",
+      "email": "ec118@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0119",
+    "first_name": "Anita",
+    "last_name": "Rao",
+    "email": "anita.rao119@lumi.com",
+    "phone_number": "9876500119",
+    "hire_date": "2023-12-22",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1500000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "119, MG Road",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Rao",
+      "relationship": "Spouse",
+      "phone": "9123400119",
+      "email": "ec119@example.com"
+    }
+  },
+  {
+    "employee_id": "LGJ0120",
+    "first_name": "Rahul",
+    "last_name": "Iyer",
+    "email": "rahul.iyer120@lumi.com",
+    "phone_number": "9876500120",
+    "hire_date": "2025-02-17",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 980000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "120, MG Road",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400120",
+      "email": "ec120@example.com"
+    }
+  }
+]
