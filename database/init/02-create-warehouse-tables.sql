@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS employee (
 
     employment_status VARCHAR(13),
 
-    manager_id VARCHAR(20),
+    manager_id VARCHAR(7),
 
     is_active BOOLEAN,
 

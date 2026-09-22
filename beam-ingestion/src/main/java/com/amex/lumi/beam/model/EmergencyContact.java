@@ -1,21 +1,22 @@
 package com.amex.lumi.beam.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * Employee emergency-contact value object mapped from nested input fields.
+ * Emergency contact. Saved as JSONB; only the phone is encrypted.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmergencyContact implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String name;
-
     private String relationship;
-
     private String phone;
-
     private String email;
-
-    public EmergencyContact() {
-    }
 
     public String getName() {
         return name;
@@ -50,29 +51,21 @@ public class EmergencyContact implements Serializable {
     }
 
     @Override
-public boolean equals(Object o) {
-    if (this == o) {
-        return true;
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof EmergencyContact that)) {
+            return false;
+        }
+        return Objects.equals(name, that.name)
+                && Objects.equals(relationship, that.relationship)
+                && Objects.equals(phone, that.phone)
+                && Objects.equals(email, that.email);
     }
 
-    if (!(o instanceof EmergencyContact that)) {
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, relationship, phone, email);
     }
-
-    return java.util.Objects.equals(name, that.name)
-            && java.util.Objects.equals(relationship, that.relationship)
-            && java.util.Objects.equals(phone, that.phone)
-            && java.util.Objects.equals(email, that.email);
-}
-
-@Override
-public int hashCode() {
-    return java.util.Objects.hash(
-            name,
-            relationship,
-            phone,
-            email
-    );
-}
-
 }

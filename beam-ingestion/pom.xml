@@ -1,68 +1,31 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
-             http://maven.apache.org/POM/4.0.0
-             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Project Information -->
     <groupId>com.amex.lumi</groupId>
-
     <artifactId>beam-ingestion</artifactId>
-
     <version>1.0.0-SNAPSHOT</version>
-
     <name>beam-ingestion</name>
-
-    <description>
-        Apache Beam Java ingestion pipeline for Amex Lumi case study
-    </description>
-
-
-    <!-- ========================================================= -->
-    <!-- Properties                                                -->
-    <!-- ========================================================= -->
+    <description>Apache Beam pipeline that loads employee CSV/JSON files into PostgreSQL</description>
 
     <properties>
-
-        <!-- Java -->
         <maven.compiler.release>17</maven.compiler.release>
-
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- Apache Beam -->
         <beam.version>2.76.0</beam.version>
-
-        <!-- Jackson -->
         <jackson.version>2.20.0</jackson.version>
-
-        <!-- JUnit -->
+        <postgresql.version>42.7.7</postgresql.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
+        <slf4j.version>2.0.16</slf4j.version>
         <junit.version>5.12.2</junit.version>
-
-        <!-- Maven plugins -->
-        <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
-        <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
-
     </properties>
 
-
-    <!-- ========================================================= -->
-    <!-- Dependency Management                                     -->
-    <!-- ========================================================= -->
-
     <dependencyManagement>
-
         <dependencies>
-
-            <!--
-                Jackson BOM keeps all Jackson modules
-                on a compatible version.
-            -->
+            <!-- Keeps all Jackson modules on the same version. -->
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
@@ -70,34 +33,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
         </dependencies>
-
     </dependencyManagement>
 
-
-    <!-- ========================================================= -->
-    <!-- Dependencies                                               -->
-    <!-- ========================================================= -->
-
     <dependencies>
-
-        <!-- ===================================================== -->
-        <!-- Apache Beam                                            -->
-        <!-- ===================================================== -->
-
-        <!-- Apache Beam Java SDK -->
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-sdks-java-core</artifactId>
             <version>${beam.version}</version>
         </dependency>
-
-
-        <!--
-            DirectRunner allows us to run Beam locally
-            during development and testing.
-        -->
+        <!-- Runs the pipeline locally inside this JVM. -->
         <dependency>
             <groupId>org.apache.beam</groupId>
             <artifactId>beam-runners-direct-java</artifactId>
@@ -105,21 +50,27 @@
             <scope>runtime</scope>
         </dependency>
 
-
-        <!-- ===================================================== -->
-        <!-- Jackson                                                -->
-        <!-- ===================================================== -->
-
-        <!-- JSON serialization/deserialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
 
-
-        <!-- ===================================================== -->
-        <!-- Testing                                                 -->
-        <!-- ===================================================== -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -127,137 +78,73 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-       <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>2.0.16</version>
-    <scope>runtime</scope>
-</dependency>
-
-
-<dependency>
-    <groupId>org.apache.beam</groupId>
-    <artifactId>beam-sdks-java-io-jdbc</artifactId>
-    <version>${beam.version}</version>
-</dependency>
-
-<dependency>
-    <groupId>org.postgresql</groupId>
-    <artifactId>postgresql</artifactId>
-    <version>42.7.7</version>
-</dependency>
-
-<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.13.2</version>
-    <scope>test</scope>
-</dependency>
-
-
-<!-- Robust CSV parsing with header and quoted-field support -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-csv</artifactId>
-    <version>1.14.1</version>
-</dependency>
-
-
-<dependency>
-    <groupId>org.hamcrest</groupId>
-    <artifactId>hamcrest</artifactId>
-    <version>2.2</version>
-    <scope>test</scope>
-</dependency>
-
-
-
-
+        <!-- Beam's PAssert needs JUnit 4 and Hamcrest on the test classpath. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
-
-    <!-- ========================================================= -->
-    <!-- Build Configuration                                       -->
-    <!-- ========================================================= -->
-
     <build>
-
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.3</version>
+                <configuration>
+                    <!-- Same time zone as production. Some machines report old zone names
+                         (e.g. Asia/Calcutta) that PostgreSQL refuses at login. -->
+                    <argLine>-Duser.timezone=UTC</argLine>
+                </configuration>
+            </plugin>
 
-           <!-- Java compiler -->
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>${maven.compiler.plugin.version}</version>
-
-    <configuration>
-        <release>${maven.compiler.release}</release>
-    </configuration>
-</plugin>
-
-
-<!-- JUnit test execution -->
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>${maven.surefire.plugin.version}</version>
-</plugin>
-
-
-<!-- ========================================================= -->
-<!-- Executable Beam JAR                                       -->
-<!-- ========================================================= -->
-
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-shade-plugin</artifactId>
-    <version>3.6.0</version>
-
-    <executions>
-        <execution>
-            <phase>package</phase>
-
-            <goals>
-                <goal>shade</goal>
-            </goals>
-
-            <configuration>
-
-                <shadedArtifactAttached>false</shadedArtifactAttached>
-
-                <createDependencyReducedPom>false</createDependencyReducedPom>
-
-                <filters>
-                    <filter>
-                        <artifact>*:*</artifact>
-                        <excludes>
-                            <exclude>META-INF/*.SF</exclude>
-                            <exclude>META-INF/*.DSA</exclude>
-                            <exclude>META-INF/*.RSA</exclude>
-                        </excludes>
-                    </filter>
-                </filters>
-
-                <transformers>
-
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                        <mainClass>
-                            com.amex.lumi.beam.pipeline.EmployeeIngestionPipeline
-                        </mainClass>
-                    </transformer>
-
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-
-                </transformers>
-
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-
+            <!-- Builds one runnable JAR with all dependencies, used by Airflow. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.amex.lumi.beam.pipeline.EmployeeIngestionPipeline</mainClass>
+                                </transformer>
+                                <!-- Merges Beam's service files so runners and file systems are found. -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
-
 </project>

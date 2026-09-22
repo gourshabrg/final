@@ -1,26 +1,27 @@
 package com.amex.lumi.beam.model;
-import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 /**
- * Employee address value object mapped from nested input fields.
+ * Employee address. Saved as JSONB.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String street;
-
     private String city;
-
     private String state;
 
     @JsonProperty("postal_code")
     private String postalCode;
 
     private String country;
-
-    public Address() {
-    }
 
     public String getStreet() {
         return street;
@@ -61,32 +62,24 @@ public class Address implements Serializable {
     public void setCountry(String country) {
         this.country = country;
     }
+
     @Override
-public boolean equals(Object o) {
-    if (this == o) {
-        return true;
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Address that)) {
+            return false;
+        }
+        return Objects.equals(street, that.street)
+                && Objects.equals(city, that.city)
+                && Objects.equals(state, that.state)
+                && Objects.equals(postalCode, that.postalCode)
+                && Objects.equals(country, that.country);
     }
 
-    if (!(o instanceof Address address)) {
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(street, city, state, postalCode, country);
     }
-
-    return java.util.Objects.equals(street, address.street)
-            && java.util.Objects.equals(city, address.city)
-            && java.util.Objects.equals(state, address.state)
-            && java.util.Objects.equals(postalCode, address.postalCode)
-            && java.util.Objects.equals(country, address.country);
-}
-
-@Override
-public int hashCode() {
-    return java.util.Objects.hash(
-            street,
-            city,
-            state,
-            postalCode,
-            country
-    );
-}
-
 }

@@ -1,139 +1,62 @@
 package com.amex.lumi.beam.encryption;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AesGcmEncryptionServiceTest {
 
-    private AesGcmEncryptionService encryptionService;
-
-    @BeforeEach
-    void setUp() {
-
-        byte[] key =
-                "12345678901234567890123456789012"
-                        .getBytes(
-                                StandardCharsets.UTF_8
-                        );
-
-        encryptionService =
-                new AesGcmEncryptionService(key);
-    }
-
+    private final AesGcmEncryptionService service =
+            AesGcmEncryptionService.fromKey("0123456789abcdef0123456789abcdef");
 
     @Test
-    void shouldEncryptAndDecryptSuccessfully() {
+    void encryptsAndDecrypts() {
+        String encrypted = service.encrypt("9876543210");
 
-        String original =
-                "9876500000";
-
-        String encrypted =
-                encryptionService.encrypt(original);
-
-        String decrypted =
-                encryptionService.decrypt(encrypted);
-
-        assertNotNull(encrypted);
-
-        assertNotEquals(
-                original,
-                encrypted
-        );
-
-        assertEquals(
-                original,
-                decrypted
-        );
+        assertTrue(encrypted.startsWith("v1:"));
+        assertEquals("9876543210", service.decrypt(encrypted));
     }
 
-
     @Test
-    void shouldGenerateDifferentCiphertextForSamePlaintext() {
-
-        String original =
-                "9876500000";
-
-        String encryptedFirst =
-                encryptionService.encrypt(original);
-
-        String encryptedSecond =
-                encryptionService.encrypt(original);
-
-        assertNotEquals(
-                encryptedFirst,
-                encryptedSecond
-        );
-
-        assertEquals(
-                original,
-                encryptionService.decrypt(
-                        encryptedFirst
-                )
-        );
-
-        assertEquals(
-                original,
-                encryptionService.decrypt(
-                        encryptedSecond
-                )
-        );
+    void sameValueGivesDifferentCiphertext() {
+        assertNotEquals(service.encrypt("950000"), service.encrypt("950000"));
     }
 
-
     @Test
-    void shouldFailWhenCiphertextIsTampered() {
+    void tamperedValueIsRejected() {
+        String encrypted = service.encrypt("950000");
+        String tampered = encrypted.substring(0, encrypted.length() - 2) + "AA";
 
-        String encrypted =
-                encryptionService.encrypt(
-                        "9876500000"
-                );
-
-        String[] parts =
-                encrypted.split(
-                        ":",
-                        -1
-                );
-
-        String tamperedCiphertext =
-                parts[0]
-                        + ":"
-                        + parts[1]
-                        + ":"
-                        + parts[2]
-                                .substring(
-                                        0,
-                                        parts[2].length() - 1
-                                )
-                        + "A";
-
-        assertThrows(
-                EncryptionException.class,
-                () -> encryptionService.decrypt(
-                        tamperedCiphertext
-                )
-        );
+        assertThrows(EncryptionException.class, () -> service.decrypt(tampered));
     }
 
+    @Test
+    void keyMustBeThirtyTwoBytes() {
+        assertThrows(IllegalArgumentException.class, () -> AesGcmEncryptionService.fromKey("too-short"));
+    }
 
     @Test
-    void shouldRejectInvalidKeyLength() {
+    void blankValueCannotBeDecrypted() {
+        assertThrows(IllegalArgumentException.class, () -> service.decrypt(" "));
+    }
 
-        byte[] invalidKey =
-                "short-key"
-                        .getBytes(
-                                StandardCharsets.UTF_8
-                        );
+    @Test
+    void wrongFormatCannotBeDecrypted() {
+        assertThrows(EncryptionException.class, () -> service.decrypt("not-encrypted"));
+    }
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () ->
-                        new AesGcmEncryptionService(
-                                invalidKey
-                        )
-        );
+    @Test
+    void unknownVersionCannotBeDecrypted() {
+        String encrypted = service.encrypt("950000");
+
+        assertThrows(EncryptionException.class, () -> service.decrypt(encrypted.replace("v1:", "v2:")));
+    }
+
+    @Test
+    void nullCannotBeEncrypted() {
+        assertThrows(IllegalArgumentException.class, () -> service.encrypt(null));
     }
 }

@@ -1,14 +1,19 @@
 package com.amex.lumi.beam.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Canonical employee payload shared by the ingestion readers and Beam stages.
+ * Employee fields from any file format. Has setters because the parsers fill it field by field.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmployeeRecord implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty("employee_id")
     private String employeeId;
@@ -51,9 +56,6 @@ public class EmployeeRecord implements Serializable {
 
     @JsonProperty("emergency_contact")
     private EmergencyContact emergencyContact;
-
-    public EmployeeRecord() {
-    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -155,8 +157,8 @@ public class EmployeeRecord implements Serializable {
         return isActive;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public List<String> getSkills() {
@@ -179,60 +181,46 @@ public class EmployeeRecord implements Serializable {
         return emergencyContact;
     }
 
-    public void setEmergencyContact(
-            EmergencyContact emergencyContact) {
-
+    public void setEmergencyContact(EmergencyContact emergencyContact) {
         this.emergencyContact = emergencyContact;
     }
 
     @Override
-public boolean equals(Object o) {
-    if (this == o) {
-        return true;
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof EmployeeRecord that)) {
+            return false;
+        }
+        return Objects.equals(employeeId, that.employeeId)
+                && Objects.equals(firstName, that.firstName)
+                && Objects.equals(lastName, that.lastName)
+                && Objects.equals(email, that.email)
+                && Objects.equals(phoneNumber, that.phoneNumber)
+                && Objects.equals(hireDate, that.hireDate)
+                && Objects.equals(department, that.department)
+                && Objects.equals(jobTitle, that.jobTitle)
+                && Objects.equals(salary, that.salary)
+                && Objects.equals(currency, that.currency)
+                && Objects.equals(employmentStatus, that.employmentStatus)
+                && Objects.equals(managerId, that.managerId)
+                && Objects.equals(isActive, that.isActive)
+                && Objects.equals(skills, that.skills)
+                && Objects.equals(address, that.address)
+                && Objects.equals(emergencyContact, that.emergencyContact);
     }
 
-    if (!(o instanceof EmployeeRecord that)) {
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeId, firstName, lastName, email, phoneNumber, hireDate,
+                department, jobTitle, salary, currency, employmentStatus, managerId,
+                isActive, skills, address, emergencyContact);
     }
 
-    return java.util.Objects.equals(employeeId, that.employeeId)
-            && java.util.Objects.equals(firstName, that.firstName)
-            && java.util.Objects.equals(lastName, that.lastName)
-            && java.util.Objects.equals(email, that.email)
-            && java.util.Objects.equals(phoneNumber, that.phoneNumber)
-            && java.util.Objects.equals(hireDate, that.hireDate)
-            && java.util.Objects.equals(department, that.department)
-            && java.util.Objects.equals(jobTitle, that.jobTitle)
-            && java.util.Objects.equals(salary, that.salary)
-            && java.util.Objects.equals(currency, that.currency)
-            && java.util.Objects.equals(employmentStatus, that.employmentStatus)
-            && java.util.Objects.equals(managerId, that.managerId)
-            && java.util.Objects.equals(isActive, that.isActive)
-            && java.util.Objects.equals(skills, that.skills)
-            && java.util.Objects.equals(address, that.address)
-            && java.util.Objects.equals(emergencyContact, that.emergencyContact);
-}
-
-@Override
-public int hashCode() {
-    return java.util.Objects.hash(
-            employeeId,
-            firstName,
-            lastName,
-            email,
-            phoneNumber,
-            hireDate,
-            department,
-            jobTitle,
-            salary,
-            currency,
-            employmentStatus,
-            managerId,
-            isActive,
-            skills,
-            address,
-            emergencyContact
-    );
-}
-
+    // Only the id, so salary and phone never reach the logs.
+    @Override
+    public String toString() {
+        return "EmployeeRecord{employeeId='" + employeeId + "'}";
+    }
 }

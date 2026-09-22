@@ -1,77 +1,59 @@
 package com.amex.lumi.ingestion.client;
 
 import com.amex.lumi.ingestion.config.AirflowProperties;
-import com.amex.lumi.ingestion.dto.AirflowDagRunRequest;
 import com.amex.lumi.ingestion.exception.AirflowTriggerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
+import java.time.Duration;
+
+/**
+ * Calls the Airflow REST API with basic auth.
+ */
 @Component
 public class AirflowRestClient implements AirflowClient {
 
-    private static final Logger LOGGER =
-            LoggerFactory.getLogger(AirflowRestClient.class);
+    private static final String DAG_RUNS_PATH = "/api/v1/dags/{dagId}/dagRuns";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AirflowRestClient.class);
 
     private final RestClient restClient;
-    private final AirflowProperties properties;
+    private final String dagId;
 
-    public AirflowRestClient(
-            AirflowProperties properties) {
+    public AirflowRestClient(AirflowProperties properties) {
+        // Timeouts: if Airflow hangs, our API threads are not blocked forever.
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(Duration.ofSeconds(properties.connectTimeoutSeconds()));
+        requestFactory.setReadTimeout(Duration.ofSeconds(properties.readTimeoutSeconds()));
 
-        this.properties = properties;
-
+        this.dagId = properties.dagId();
         this.restClient = RestClient.builder()
-                .baseUrl(properties.getBaseUrl())
-                .defaultHeaders(headers ->
-                        headers.setBasicAuth(
-                                properties.getUsername(),
-                                properties.getPassword()
-                        )
-                )
+                .baseUrl(properties.baseUrl())
+                .requestFactory(requestFactory)
+                .defaultHeaders(headers -> headers.setBasicAuth(properties.username(), properties.password()))
                 .build();
     }
 
     @Override
-    public void triggerDag(
-            AirflowDagRunRequest request) {
-
+    public void triggerDag(AirflowDagRunRequest request) {
+        LOGGER.info("Triggering Airflow DAG {} with run id {}", dagId, request.dagRunId());
         try {
-
             restClient.post()
-                    .uri(
-                            "/api/v1/dags/{dagId}/dagRuns",
-                            properties.getDagId()
-                    )
-                    .contentType(
-                            MediaType.APPLICATION_JSON
-                    )
+                    .uri(DAG_RUNS_PATH, dagId)
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(request)
                     .retrieve()
                     .toBodilessEntity();
-
-            LOGGER.info(
-                    "Airflow DAG triggered successfully: dagId={}, dagRunId={}",
-                    properties.getDagId(),
-                    request.getDagRunId()
-            );
-
-        } catch (Exception exception) {
-
-            LOGGER.error(
-                    "Failed to trigger Airflow DAG: dagId={}, dagRunId={}",
-                    properties.getDagId(),
-                    request.getDagRunId(),
-                    exception
-            );
-
-            throw new AirflowTriggerException(
-                    "Unable to trigger Airflow DAG",
-                    exception
-            );
+        } catch (RestClientException exception) {
+            LOGGER.error("Airflow rejected or did not answer DAG run {}", request.dagRunId(), exception);
+            throw new AirflowTriggerException("Unable to trigger Airflow DAG " + dagId + ": "
+                    + exception.getMessage(), exception);
         }
+        LOGGER.info("Airflow accepted DAG run {}", request.dagRunId());
     }
 }
-

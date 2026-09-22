@@ -1,0 +1,662 @@
+[
+  {
+    "employee_id": "JSN0001",
+    "first_name": "Anita",
+    "last_name": "Patel",
+    "email": "anita.patel1@lumi.com",
+    "phone_number": "9876500001",
+    "hire_date": "2024-02-22",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1000000,
+    "currency": "INR",
+    "employment_status": "Part-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "AWS",
+      "Python",
+      "Java"
+    ],
+    "address": {
+      "street": "1, Silicon Heights",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Rahul Patel",
+      "relationship": "Spouse",
+      "phone": "9123400001",
+      "email": "ec1@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0002",
+    "first_name": "Priya",
+    "last_name": "Khan",
+    "email": "priya.khan2@lumi.com",
+    "phone_number": "9876500002",
+    "hire_date": "2023-06-09",
+    "department": "Operations",
+    "job_title": "Ops Coordinator",
+    "salary": 920000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python",
+      "SQL"
+    ],
+    "address": {
+      "street": "2, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Khan",
+      "relationship": "Spouse",
+      "phone": "9123400002",
+      "email": "ec2@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0003",
+    "first_name": "Sara",
+    "last_name": "Patel",
+    "email": "sara.patel3@lumi.com",
+    "phone_number": "9876500003",
+    "hire_date": "2024-10-04",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 580000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "3, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Patel",
+      "relationship": "Spouse",
+      "phone": "9123400003",
+      "email": "ec3@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0004",
+    "first_name": "Sara",
+    "last_name": "Rao",
+    "email": "sara.rao4@lumi.com",
+    "phone_number": "9876500004",
+    "hire_date": "2023-12-10",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1960000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0009",
+    "is_active": false,
+    "skills": [
+      "AWS",
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "4, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Rao",
+      "relationship": "Spouse",
+      "phone": "9123400004",
+      "email": "ec4@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0005",
+    "first_name": "Vikram",
+    "last_name": "Patel",
+    "email": "vikram.patel5@lumi.com",
+    "phone_number": "9876500005",
+    "hire_date": "2023-03-09",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1120000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL",
+      "Docker"
+    ],
+    "address": {
+      "street": "5, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Patel",
+      "relationship": "Spouse",
+      "phone": "9123400005",
+      "email": "ec5@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0006",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel6@lumi.com",
+    "phone_number": "9876500006",
+    "hire_date": "2015-01-11",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 2370000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS",
+      "Spark"
+    ],
+    "address": {
+      "street": "6, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Patel",
+      "relationship": "Spouse",
+      "phone": "9123400006",
+      "email": "ec6@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0007",
+    "first_name": "Arjun",
+    "last_name": "Patel",
+    "email": "arjun.patel7@lumi.com",
+    "phone_number": "9876500007",
+    "hire_date": "2017-09-02",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1340000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0009",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Java",
+      "SQL"
+    ],
+    "address": {
+      "street": "7, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Sara Patel",
+      "relationship": "Spouse",
+      "phone": "9123400007",
+      "email": "ec7@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0008",
+    "first_name": "Arjun",
+    "last_name": "Iyer",
+    "email": "arjun.iyer8@lumi.com",
+    "phone_number": "9876500008",
+    "hire_date": "2018-11-04",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1300000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Python",
+      "AWS"
+    ],
+    "address": {
+      "street": "8, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Iyer",
+      "relationship": "Spouse",
+      "phone": "9123400008",
+      "email": "ec8@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0009",
+    "first_name": "Ravi",
+    "last_name": "Khan",
+    "email": "ravi.khan9@lumi.com",
+    "phone_number": "9876500009",
+    "hire_date": "2020-07-26",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 2110000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0004",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java",
+      "Docker"
+    ],
+    "address": {
+      "street": "9, Silicon Heights",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Khan",
+      "relationship": "Spouse",
+      "phone": "9123400009",
+      "email": "ec9@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0010",
+    "first_name": "Karan",
+    "last_name": "Singh",
+    "email": "karan.singh10@lumi.com",
+    "phone_number": "9876500010",
+    "hire_date": "2020-05-27",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 2430000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0004",
+    "is_active": false,
+    "skills": [
+      "Python",
+      "Docker",
+      "SQL"
+    ],
+    "address": {
+      "street": "10, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Vikram Singh",
+      "relationship": "Spouse",
+      "phone": "9123400010",
+      "email": "ec10@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0011",
+    "first_name": "Priya",
+    "last_name": "Rao",
+    "email": "priya.rao11@lumi.com",
+    "phone_number": "9876500011",
+    "hire_date": "2023-07-22",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1770000,
+    "currency": "INR",
+    "employment_status": "Part-time",
+    "manager_id": "MGR0001",
+    "is_active": true,
+    "skills": [
+      "SQL",
+      "Python",
+      "Spark"
+    ],
+    "address": {
+      "street": "11, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Rao",
+      "relationship": "Spouse",
+      "phone": "9123400011",
+      "email": "ec11@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0012",
+    "first_name": "Priya",
+    "last_name": "Nair",
+    "email": "priya.nair12@lumi.com",
+    "phone_number": "9876500012",
+    "hire_date": "2020-07-20",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1700000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "SQL",
+      "Java"
+    ],
+    "address": {
+      "street": "12, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Nair",
+      "relationship": "Spouse",
+      "phone": "9123400012",
+      "email": "ec12@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0013",
+    "first_name": "Arjun",
+    "last_name": "Mehta",
+    "email": "arjun.mehta13@lumi.com",
+    "phone_number": "9876500013",
+    "hire_date": "2025-04-12",
+    "department": "Operations",
+    "job_title": "Ops Coordinator",
+    "salary": 1500000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "Java",
+      "SQL"
+    ],
+    "address": {
+      "street": "13, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Anita Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400013",
+      "email": "ec13@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0014",
+    "first_name": "Vikram",
+    "last_name": "Khan",
+    "email": "vikram.khan14@lumi.com",
+    "phone_number": "9876500014",
+    "hire_date": "2019-09-05",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 890000,
+    "currency": "INR",
+    "employment_status": "Part-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "14, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Meera Khan",
+      "relationship": "Spouse",
+      "phone": "9123400014",
+      "email": "ec14@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0015",
+    "first_name": "Anita",
+    "last_name": "Sharma",
+    "email": "anita.sharma15@lumi.com",
+    "phone_number": "9876500015",
+    "hire_date": "2018-07-26",
+    "department": "HR",
+    "job_title": "HR Specialist",
+    "salary": 1880000,
+    "currency": "INR",
+    "employment_status": "Contract",
+    "manager_id": "MGR0006",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "Python",
+      "Spark"
+    ],
+    "address": {
+      "street": "15, Silicon Heights",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "postal_code": "411001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Sharma",
+      "relationship": "Spouse",
+      "phone": "9123400015",
+      "email": "ec15@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0016",
+    "first_name": "Priya",
+    "last_name": "Rao",
+    "email": "priya.rao16@lumi.com",
+    "phone_number": "9876500016",
+    "hire_date": "2025-10-11",
+    "department": "Operations",
+    "job_title": "Ops Coordinator",
+    "salary": 630000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "16, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Arjun Rao",
+      "relationship": "Spouse",
+      "phone": "9123400016",
+      "email": "ec16@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0017",
+    "first_name": "Neha",
+    "last_name": "Das",
+    "email": "neha.das17@lumi.com",
+    "phone_number": "9876500017",
+    "hire_date": "2022-07-21",
+    "department": "Operations",
+    "job_title": "Ops Coordinator",
+    "salary": 1870000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0007",
+    "is_active": true,
+    "skills": [
+      "Python",
+      "Spark",
+      "Java"
+    ],
+    "address": {
+      "street": "17, Silicon Heights",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "postal_code": "560100",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Priya Das",
+      "relationship": "Spouse",
+      "phone": "9123400017",
+      "email": "ec17@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0018",
+    "first_name": "Meera",
+    "last_name": "Singh",
+    "email": "meera.singh18@lumi.com",
+    "phone_number": "9876500018",
+    "hire_date": "2023-08-02",
+    "department": "Finance",
+    "job_title": "Financial Analyst",
+    "salary": 1820000,
+    "currency": "INR",
+    "employment_status": "Full-time",
+    "manager_id": "MGR0002",
+    "is_active": true,
+    "skills": [
+      "Docker",
+      "AWS",
+      "SQL"
+    ],
+    "address": {
+      "street": "18, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Karan Singh",
+      "relationship": "Spouse",
+      "phone": "9123400018",
+      "email": "ec18@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0019",
+    "first_name": "Rahul",
+    "last_name": "Mehta",
+    "email": "rahul.mehta19@lumi.com",
+    "phone_number": "9876500019",
+    "hire_date": "2022-03-24",
+    "department": "Sales",
+    "job_title": "Account Manager",
+    "salary": 1610000,
+    "currency": "INR",
+    "employment_status": "Part-time",
+    "manager_id": "MGR0005",
+    "is_active": true,
+    "skills": [
+      "Spark",
+      "SQL",
+      "Docker"
+    ],
+    "address": {
+      "street": "19, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Neha Mehta",
+      "relationship": "Spouse",
+      "phone": "9123400019",
+      "email": "ec19@example.com"
+    }
+  },
+  {
+    "employee_id": "JSN0020",
+    "first_name": "Vikram",
+    "last_name": "Das",
+    "email": "vikram.das20@lumi.com",
+    "phone_number": "9876500020",
+    "hire_date": "2019-04-09",
+    "department": "Engineering",
+    "job_title": "Backend Engineer",
+    "salary": 1250000,
+    "currency": "INR",
+    "employment_status": "Part-time",
+    "manager_id": "MGR0009",
+    "is_active": false,
+    "skills": [
+      "Python",
+      "Spark",
+      "Docker"
+    ],
+    "address": {
+      "street": "20, Silicon Heights",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "452001",
+      "country": "India"
+    },
+    "emergency_contact": {
+      "name": "Ravi Das",
+      "relationship": "Spouse",
+      "phone": "9123400020",
+      "email": "ec20@example.com"
+    }
+  }
+]

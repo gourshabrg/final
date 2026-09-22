@@ -2,130 +2,48 @@ package com.amex.lumi.beam.model;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
 
 /**
- * Immutable lifecycle snapshot for one ingestion execution.
+ * One row of the ingestion_execution table. Create it with the static methods below.
  */
-public class IngestionExecution implements Serializable {
+public record IngestionExecution(
+        String executionId,
+        String sourceFile,
+        ExecutionStatus status,
+        Long expectedRecordCount,
+        Long actualLoadedRecordCount,
+        Instant startedAt,
+        Instant completedAt,
+        String failureReason) implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private final String executionId;
-    private final String sourceFile;
-    private final IngestionExecutionStatus status; 
-    private final Long expectedRecordCount;
-    private final Long actualLoadedRecordCount;
-    private final Instant startedAt;
-    private final Instant completedAt;
-    private final String failureReason;
-
-    public IngestionExecution(
-            String executionId,
-            String sourceFile,
-            IngestionExecutionStatus status,
-            Long expectedRecordCount,
-            Long actualLoadedRecordCount,
-            Instant startedAt,
-            Instant completedAt,
-            String failureReason) {
-
-        this.executionId = executionId;
-        this.sourceFile = sourceFile;
-        this.status = status;
-        this.expectedRecordCount = expectedRecordCount;
-        this.actualLoadedRecordCount = actualLoadedRecordCount;
-        this.startedAt = startedAt;
-        this.completedAt = completedAt;
-        this.failureReason = failureReason;
+    public static IngestionExecution started(
+            String executionId, String sourceFile, long expectedRecordCount, Instant startedAt) {
+        return new IngestionExecution(
+                executionId, sourceFile, ExecutionStatus.STARTED,
+                expectedRecordCount, null, startedAt, null, null);
     }
 
-    public String getExecutionId() {
-        return executionId;
+    public static IngestionExecution running(
+            String executionId, String sourceFile, long expectedRecordCount, Instant startedAt) {
+        return new IngestionExecution(
+                executionId, sourceFile, ExecutionStatus.RUNNING,
+                expectedRecordCount, null, startedAt, null, null);
     }
 
-    public String getSourceFile() {
-        return sourceFile;
+    public static IngestionExecution succeeded(
+            String executionId, String sourceFile, long expectedRecordCount,
+            long actualLoadedRecordCount, Instant startedAt, Instant completedAt) {
+        return new IngestionExecution(
+                executionId, sourceFile, ExecutionStatus.SUCCESS,
+                expectedRecordCount, actualLoadedRecordCount, startedAt, completedAt, null);
     }
 
-   	public IngestionExecutionStatus getStatus() {
-    return status;
-}
-
-
-    public Long getExpectedRecordCount() {
-        return expectedRecordCount;
-    }
-
-    public Long getActualLoadedRecordCount() {
-        return actualLoadedRecordCount;
-    }
-
-    public Instant getStartedAt() {
-        return startedAt;
-    }
-
-    public Instant getCompletedAt() {
-        return completedAt;
-    }
-
-    public String getFailureReason() {
-        return failureReason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof IngestionExecution that)) {
-            return false;
-        }
-
-        return Objects.equals(executionId, that.executionId)
-                && Objects.equals(sourceFile, that.sourceFile)
-                && Objects.equals(status, that.status)
-                && Objects.equals(
-                        expectedRecordCount,
-                        that.expectedRecordCount
-                )
-                && Objects.equals(
-                        actualLoadedRecordCount,
-                        that.actualLoadedRecordCount
-                )
-                && Objects.equals(startedAt, that.startedAt)
-                && Objects.equals(completedAt, that.completedAt)
-                && Objects.equals(failureReason, that.failureReason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                executionId,
-                sourceFile,
-                status,
-                expectedRecordCount,
-                actualLoadedRecordCount,
-                startedAt,
-                completedAt,
-                failureReason
-        );
-    }
-
-    @Override
-    public String toString() {
-        return "IngestionExecution{"
-                + "executionId='" + executionId + '\''
-                + ", sourceFile='" + sourceFile + '\''
-                + ", status='" + status + '\''
-                + ", expectedRecordCount="
-                + expectedRecordCount
-                + ", actualLoadedRecordCount="
-                + actualLoadedRecordCount
-                + ", startedAt=" + startedAt
-                + ", completedAt=" + completedAt
-                + ", failureReason='" + failureReason + '\''
-                + '}';
+    /** expectedRecordCount is null when the control file itself could not be read. */
+    public static IngestionExecution failed(
+            String executionId, String sourceFile, Long expectedRecordCount,
+            Long actualLoadedRecordCount, Instant startedAt, Instant completedAt, String failureReason) {
+        return new IngestionExecution(
+                executionId, sourceFile, ExecutionStatus.FAILED,
+                expectedRecordCount, actualLoadedRecordCount, startedAt, completedAt, failureReason);
     }
 }
