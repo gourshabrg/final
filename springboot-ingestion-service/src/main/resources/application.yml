@@ -1,0 +1,39 @@
+spring:
+  config:
+    import:
+      - optional:file:../.env[.properties]
+      - optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/warehouse
+    username: airflow
+    password: airflow
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      data-source-properties:
+        options: "-c TimeZone=UTC"
+
+lumi:
+  encryption:
+    key: ${LUMI_ENCRYPTION_KEY}
+
+  ingestion:
+    file-size-threshold-bytes: 1
+
+    allowed-file-types:
+      - JSON
+      - CSV
+      - XML
+      - FIXED_WIDTH
+
+    local-data-root: "C:/Users/Ravindra/Desktop/Assignment/amex-lumi-ingestion-ravindra/data"
+    airflow-data-root: "/opt/lumi/data"
+
+    local-control-file-root: "C:/Users/Ravindra/Desktop/Assignment/amex-lumi-ingestion-ravindra/control-files"
+    airflow-control-file-root: "/opt/lumi/control-files"
+
+  airflow:
+    base-url: "http://localhost:8082"
+    username: "airflow"
+    password: "airflow"
+    dag-id: "lumi_ingestion_orchestrator"
