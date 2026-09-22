@@ -1,44 +1,20 @@
 package com.amex.lumi.ingestion.config;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
+/**
+ * lumi.airflow.* settings: where Airflow runs and which DAG to trigger.
+ */
+@Validated
 @ConfigurationProperties(prefix = "lumi.airflow")
-public class AirflowProperties {
-
-    private String baseUrl;
-    private String username;
-    private String password;
-    private String dagId;
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDagId() {
-        return dagId;
-    }
-
-    public void setDagId(String dagId) {
-        this.dagId = dagId;
-    }
+public record AirflowProperties(
+        @NotBlank String baseUrl,
+        @NotBlank String username,
+        @NotBlank String password,
+        @NotBlank String dagId,
+        @Positive int connectTimeoutSeconds,
+        @Positive int readTimeoutSeconds) {
 }

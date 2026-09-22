@@ -1,14 +1,15 @@
 spring:
+  application:
+    name: lumi-ingestion-service
   config:
+    # Reads LUMI_ENCRYPTION_KEY from the project .env file.
     import:
       - optional:file:../.env[.properties]
       - optional:file:.env[.properties]
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/warehouse
-    username: airflow
-    password: airflow
-    driver-class-name: org.postgresql.Driver
+    url: ${LUMI_WAREHOUSE_JDBC_URL:jdbc:postgresql://localhost:5432/warehouse}
+    username: ${LUMI_WAREHOUSE_USERNAME:airflow}
+    password: ${LUMI_WAREHOUSE_PASSWORD:airflow}
     hikari:
       data-source-properties:
         options: "-c TimeZone=UTC"
@@ -18,22 +19,30 @@ lumi:
     key: ${LUMI_ENCRYPTION_KEY}
 
   ingestion:
-    file-size-threshold-bytes: 1
-
-    allowed-file-types:
-      - JSON
-      - CSV
-      - XML
-      - FIXED_WIDTH
-
-    local-data-root: "C:/Users/Ravindra/Desktop/Assignment/amex-lumi-ingestion-ravindra/data"
-    airflow-data-root: "/opt/lumi/data"
-
-    local-control-file-root: "C:/Users/Ravindra/Desktop/Assignment/amex-lumi-ingestion-ravindra/control-files"
-    airflow-control-file-root: "/opt/lumi/control-files"
+    # Files bigger than this are split by PySpark first (Phase 2). 1 byte = always split.
+    file-size-threshold-bytes: ${LUMI_FILE_SIZE_THRESHOLD_BYTES:1}
+    # Relative paths start from the folder the API is started in (springboot-ingestion-service).
+    local-data-root: ${LUMI_LOCAL_DATA_ROOT:../data}
+    local-control-file-root: ${LUMI_LOCAL_CONTROL_FILE_ROOT:../control-files}
+    # The same folders inside the Airflow containers (see docker-compose.yml volumes).
+    airflow-data-root: /opt/lumi/data
+    airflow-control-file-root: /opt/lumi/control-files
 
   airflow:
-    base-url: "http://localhost:8082"
-    username: "airflow"
-    password: "airflow"
-    dag-id: "lumi_ingestion_orchestrator"
+    base-url: ${AIRFLOW_BASE_URL:http://localhost:8082}
+    username: ${AIRFLOW_USERNAME:airflow}
+    password: ${AIRFLOW_PASSWORD:airflow}
+    dag-id: lumi_ingestion_orchestrator
+    connect-timeout-seconds: 5
+    read-timeout-seconds: 15
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  pattern:
+    # requestId / executionId come from MDC and are empty when not set.
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{requestId}] [%X{executionId}] %logger{36} - %msg%n"

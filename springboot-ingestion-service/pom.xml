@@ -11,21 +11,8 @@
 	<groupId>com.amex.lumi</groupId>
 	<artifactId>springboot-ingestion-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<name>springboot-ingestion-service</name>
+	<description>REST API that validates ingestion requests and triggers the Airflow DAG</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -76,6 +63,15 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- Same time zone as production. Some machines report old zone names
+					     (e.g. Asia/Calcutta) that PostgreSQL refuses at login. -->
+					<argLine>-Duser.timezone=UTC</argLine>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

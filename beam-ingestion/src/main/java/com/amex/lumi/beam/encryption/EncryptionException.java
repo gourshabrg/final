@@ -1,15 +1,11 @@
 package com.amex.lumi.beam.encryption;
 
 /**
- * Indicates that an encryption or decryption operation failed.
+ * Thrown when a value cannot be encrypted or decrypted.
  */
-public class EncryptionException
-        extends RuntimeException {
+public class EncryptionException extends RuntimeException {
 
-    public EncryptionException(
-            String message,
-            Throwable cause) {
-
+    public EncryptionException(String message, Throwable cause) {
         super(message, cause);
     }
 }
