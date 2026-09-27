@@ -15,7 +15,7 @@ public final class IngestionGraphRunner {
         DatabaseConfig database = new DatabaseConfig(
                 options.getJdbcUrl(), options.getJdbcUsername(), options.getJdbcPassword());
         Pipeline pipeline = Pipeline.create(options);
-        IngestionGraph.build(pipeline, options, database, run);
+        IngestionGraph.build(pipeline, options, database, run, options.getEncryptionKey());
         pipeline.run().waitUntilFinish();
     }
 }

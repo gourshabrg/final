@@ -22,38 +22,36 @@ public final class TestEmployees {
     private TestEmployees() {
     }
 
-    /** Matches CSV_ROW. */
+    /** Matches CSV_ROW. Change a field with valid().toBuilder().firstName("x").build(). */
     public static EmployeeRecord valid() {
-        EmployeeRecord employee = new EmployeeRecord();
-        employee.setEmployeeId("EMP0001");
-        employee.setFirstName("Arjun");
-        employee.setLastName("Sharma");
-        employee.setEmail("arjun.sharma@techcorp.com");
-        employee.setPhoneNumber("9876543210");
-        employee.setHireDate("2022-03-15");
-        employee.setDepartment("Engineering");
-        employee.setJobTitle("Senior Backend Engineer");
-        employee.setSalary(950000L);
-        employee.setCurrency("INR");
-        employee.setEmploymentStatus("Full-time");
-        employee.setManagerId("MGR0001");
-        employee.setIsActive(true);
-        employee.setSkills(List.of("Python", "Docker"));
-
-        Address address = new Address();
-        address.setStreet("102, Silicon Heights");
-        address.setCity("Bengaluru");
-        address.setState("Karnataka");
-        address.setPostalCode("560100");
-        address.setCountry("India");
-        employee.setAddress(address);
-
-        EmergencyContact contact = new EmergencyContact();
-        contact.setName("Priya Sharma");
-        contact.setRelationship("Spouse");
-        contact.setPhone("9876543211");
-        contact.setEmail("priya.s@example.com");
-        employee.setEmergencyContact(contact);
-        return employee;
+        return EmployeeRecord.builder()
+                .employeeId("EMP0001")
+                .firstName("Arjun")
+                .lastName("Sharma")
+                .email("arjun.sharma@techcorp.com")
+                .phoneNumber("9876543210")
+                .hireDate("2022-03-15")
+                .department("Engineering")
+                .jobTitle("Senior Backend Engineer")
+                .salary(950000L)
+                .currency("INR")
+                .employmentStatus("Full-time")
+                .managerId("MGR0001")
+                .isActive(true)
+                .skills(List.of("Python", "Docker"))
+                .address(Address.builder()
+                        .street("102, Silicon Heights")
+                        .city("Bengaluru")
+                        .state("Karnataka")
+                        .postalCode("560100")
+                        .country("India")
+                        .build())
+                .emergencyContact(EmergencyContact.builder()
+                        .name("Priya Sharma")
+                        .relationship("Spouse")
+                        .phone("9876543211")
+                        .email("priya.s@example.com")
+                        .build())
+                .build();
     }
 }

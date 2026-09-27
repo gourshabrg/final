@@ -1,5 +1,4 @@
-# Local platform: PostgreSQL (Airflow metadata + warehouse) and Airflow (webserver + scheduler).
-# The Spring Boot API runs on the host and calls Airflow on http://localhost:8082.
+# Local platform: PostgreSQL and Airflow; the API runs on the host.
 
 # Settings shared by every Airflow container (YAML anchor, reused with <<: *airflow-common).
 x-airflow-common: &airflow-common
@@ -8,24 +7,30 @@ x-airflow-common: &airflow-common
     dockerfile: airflow/Dockerfile
   environment: &airflow-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres:5432/airflow
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-    AIRFLOW__WEBSERVER__SECRET_KEY: change-me-local-only
+    # Signs Airflow web sessions; set your own random value in .env.
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_WEBSERVER_SECRET_KEY:-change-me-local-only}
     AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
     # New DAGs start un-paused so the first API call works without clicking in the UI.
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
     # Connection used by the check_execution_status task.
-    AIRFLOW_CONN_LUMI_WAREHOUSE: postgres://airflow:airflow@postgres:5432/warehouse
+    AIRFLOW_CONN_LUMI_WAREHOUSE: postgres://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD:-airflow}@postgres:5432/warehouse
     # Used by the Beam job.
     LUMI_ENCRYPTION_KEY: ${LUMI_ENCRYPTION_KEY:?Set LUMI_ENCRYPTION_KEY in .env}
     LUMI_WAREHOUSE_JDBC_URL: jdbc:postgresql://postgres:5432/warehouse
-    LUMI_WAREHOUSE_USERNAME: airflow
-    LUMI_WAREHOUSE_PASSWORD: airflow
+    LUMI_WAREHOUSE_USERNAME: ${POSTGRES_USER:-airflow}
+    LUMI_WAREHOUSE_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
   volumes:
-    - ./airflow:/opt/airflow                      # DAGs, scripts, logs
+    # Only code is mounted; logs and generated config stay inside Docker.
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/scripts:/opt/airflow/scripts
+    - ./airflow/tests:/opt/airflow/tests
+    - airflow-logs:/opt/airflow/logs
     - ./data:/opt/lumi/data                       # input, split and error files
     - ./control-files:/opt/lumi/control-files     # control files
     - ./pyspark:/opt/lumi/pyspark                 # PySpark split job
+    - ./contracts:/opt/lumi/contracts:ro          # shared contract checked by the tests
     - ./beam-ingestion/target:/opt/lumi/beam      # Beam JAR
   depends_on:
     postgres:
@@ -38,19 +43,20 @@ services:
     container_name: lumi-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      # Credentials only apply when the volume is created; change them before the first start.
+      POSTGRES_USER: ${POSTGRES_USER:-airflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-airflow}
       POSTGRES_DB: airflow
       TZ: UTC
     command: ["postgres", "-c", "timezone=UTC"]
     ports:
-      # Change POSTGRES_HOST_PORT in .env if another PostgreSQL already uses 5432 on your machine.
-      - "${POSTGRES_HOST_PORT:-5432}:5432"
+      # Only this machine can connect; change POSTGRES_HOST_PORT if 5432 is taken.
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d   # creates the warehouse on first start
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d airflow"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -60,6 +66,11 @@ services:
     <<: *airflow-common
     container_name: lumi-airflow-init
     user: "0:0"
+    environment:
+      <<: *airflow-env
+      # Admin login for the Airflow UI and REST API (only used when the user does not exist yet).
+      AIRFLOW_ADMIN_USERNAME: ${AIRFLOW_ADMIN_USERNAME:-airflow}
+      AIRFLOW_ADMIN_PASSWORD: ${AIRFLOW_ADMIN_PASSWORD:-airflow}
     command:
       - bash
       - -c
@@ -67,7 +78,7 @@ services:
         mkdir -p /opt/airflow/logs /opt/lumi/data/split /opt/lumi/data/error
         chown -R airflow:root /opt/airflow/logs /opt/lumi/data
         airflow db migrate
-        airflow users create --username airflow --password airflow \
+        airflow users create --username "$${AIRFLOW_ADMIN_USERNAME}" --password "$${AIRFLOW_ADMIN_PASSWORD}" \
           --firstname Admin --lastname User --role Admin --email admin@example.com || true
 
   airflow-webserver:
@@ -76,7 +87,7 @@ services:
     restart: unless-stopped
     command: webserver
     ports:
-      - "8082:8080"
+      - "127.0.0.1:8082:8080"
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -92,3 +103,4 @@ services:
 
 volumes:
   postgres-data:
+  airflow-logs:

@@ -2,187 +2,144 @@ package com.amex.lumi.beam.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * Employee fields from any file format. Has setters because the parsers fill it field by field.
+ * Immutable employee fields; create with {@link #builder()}, copy with {@link #toBuilder()}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmployeeRecord implements Serializable {
+@JsonDeserialize(builder = EmployeeRecord.Builder.class)
+public final class EmployeeRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("employee_id")
-    private String employeeId;
-
+    private final String employeeId;
     @JsonProperty("first_name")
-    private String firstName;
-
+    private final String firstName;
     @JsonProperty("last_name")
-    private String lastName;
-
-    private String email;
-
+    private final String lastName;
+    private final String email;
     @JsonProperty("phone_number")
-    private String phoneNumber;
-
+    private final String phoneNumber;
     @JsonProperty("hire_date")
-    private String hireDate;
-
-    private String department;
-
+    private final String hireDate;
+    private final String department;
     @JsonProperty("job_title")
-    private String jobTitle;
-
-    private Long salary;
-
-    private String currency;
-
+    private final String jobTitle;
+    private final Long salary;
+    private final String currency;
     @JsonProperty("employment_status")
-    private String employmentStatus;
-
+    private final String employmentStatus;
     @JsonProperty("manager_id")
-    private String managerId;
-
+    private final String managerId;
     @JsonProperty("is_active")
-    private Boolean isActive;
-
-    private List<String> skills;
-
-    private Address address;
-
+    private final Boolean isActive;
+    private final List<String> skills;
+    private final Address address;
     @JsonProperty("emergency_contact")
-    private EmergencyContact emergencyContact;
+    private final EmergencyContact emergencyContact;
+
+    private EmployeeRecord(Builder builder) {
+        this.employeeId = builder.employeeId;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.phoneNumber = builder.phoneNumber;
+        this.hireDate = builder.hireDate;
+        this.department = builder.department;
+        this.jobTitle = builder.jobTitle;
+        this.salary = builder.salary;
+        this.currency = builder.currency;
+        this.employmentStatus = builder.employmentStatus;
+        this.managerId = builder.managerId;
+        this.isActive = builder.isActive;
+        // Own read-only copy (ArrayList keeps null entries, List.copyOf would not).
+        this.skills = builder.skills == null ? null : Collections.unmodifiableList(new ArrayList<>(builder.skills));
+        this.address = builder.address;
+        this.emergencyContact = builder.emergencyContact;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Builder toBuilder() {
+        return new Builder().employeeId(employeeId).firstName(firstName).lastName(lastName).email(email)
+                .phoneNumber(phoneNumber).hireDate(hireDate).department(department).jobTitle(jobTitle)
+                .salary(salary).currency(currency).employmentStatus(employmentStatus).managerId(managerId)
+                .isActive(isActive).skills(skills).address(address).emergencyContact(emergencyContact);
+    }
 
     public String getEmployeeId() {
         return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public String getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(String hireDate) {
-        this.hireDate = hireDate;
-    }
-
     public String getDepartment() {
         return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     public String getJobTitle() {
         return jobTitle;
     }
 
-    public void setJobTitle(String jobTitle) {
-        this.jobTitle = jobTitle;
-    }
-
     public Long getSalary() {
         return salary;
-    }
-
-    public void setSalary(Long salary) {
-        this.salary = salary;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
     public String getEmploymentStatus() {
         return employmentStatus;
-    }
-
-    public void setEmploymentStatus(String employmentStatus) {
-        this.employmentStatus = employmentStatus;
     }
 
     public String getManagerId() {
         return managerId;
     }
 
-    public void setManagerId(String managerId) {
-        this.managerId = managerId;
-    }
-
     public Boolean getIsActive() {
         return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
     }
 
     public List<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
-    }
-
     public Address getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
     public EmergencyContact getEmergencyContact() {
         return emergencyContact;
-    }
-
-    public void setEmergencyContact(EmergencyContact emergencyContact) {
-        this.emergencyContact = emergencyContact;
     }
 
     @Override
@@ -222,5 +179,121 @@ public class EmployeeRecord implements Serializable {
     @Override
     public String toString() {
         return "EmployeeRecord{employeeId='" + employeeId + "'}";
+    }
+
+    /** Also used by Jackson to read JSON; the @JsonProperty names are the field names in the files. */
+    @JsonPOJOBuilder(withPrefix = "")
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static final class Builder {
+        private String employeeId;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String phoneNumber;
+        private String hireDate;
+        private String department;
+        private String jobTitle;
+        private Long salary;
+        private String currency;
+        private String employmentStatus;
+        private String managerId;
+        private Boolean isActive;
+        private List<String> skills;
+        private Address address;
+        private EmergencyContact emergencyContact;
+
+        @JsonProperty("employee_id")
+        public Builder employeeId(String value) {
+            this.employeeId = value;
+            return this;
+        }
+
+        @JsonProperty("first_name")
+        public Builder firstName(String value) {
+            this.firstName = value;
+            return this;
+        }
+
+        @JsonProperty("last_name")
+        public Builder lastName(String value) {
+            this.lastName = value;
+            return this;
+        }
+
+        public Builder email(String value) {
+            this.email = value;
+            return this;
+        }
+
+        @JsonProperty("phone_number")
+        public Builder phoneNumber(String value) {
+            this.phoneNumber = value;
+            return this;
+        }
+
+        @JsonProperty("hire_date")
+        public Builder hireDate(String value) {
+            this.hireDate = value;
+            return this;
+        }
+
+        public Builder department(String value) {
+            this.department = value;
+            return this;
+        }
+
+        @JsonProperty("job_title")
+        public Builder jobTitle(String value) {
+            this.jobTitle = value;
+            return this;
+        }
+
+        public Builder salary(Long value) {
+            this.salary = value;
+            return this;
+        }
+
+        public Builder currency(String value) {
+            this.currency = value;
+            return this;
+        }
+
+        @JsonProperty("employment_status")
+        public Builder employmentStatus(String value) {
+            this.employmentStatus = value;
+            return this;
+        }
+
+        @JsonProperty("manager_id")
+        public Builder managerId(String value) {
+            this.managerId = value;
+            return this;
+        }
+
+        @JsonProperty("is_active")
+        public Builder isActive(Boolean value) {
+            this.isActive = value;
+            return this;
+        }
+
+        public Builder skills(List<String> value) {
+            this.skills = value;
+            return this;
+        }
+
+        public Builder address(Address value) {
+            this.address = value;
+            return this;
+        }
+
+        @JsonProperty("emergency_contact")
+        public Builder emergencyContact(EmergencyContact value) {
+            this.emergencyContact = value;
+            return this;
+        }
+
+        public EmployeeRecord build() {
+            return new EmployeeRecord(this);
+        }
     }
 }

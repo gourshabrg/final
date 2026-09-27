@@ -19,7 +19,7 @@ class ValidateEmployeesTest {
     @Test
     void splitsValidAndInvalidRecords() {
         EmployeeRecord bad = TestEmployees.valid();
-        bad.setEmployeeId("E1");
+        bad = bad.toBuilder().employeeId("E1").build();
         Instant now = Instant.now();
 
         Pipeline pipeline = Pipeline.create();
@@ -35,7 +35,8 @@ class ValidateEmployeesTest {
                 .containsInAnyOrder(1L);
         PAssert.that(result.get(ValidateEmployees.INVALID)
                         .apply("InvalidSummary", MapElements.into(TypeDescriptors.strings())
-                                .via(failure -> failure.recordNumber() + ":" + failure.type() + ":" + failure.message())))
+                                .via(failure -> failure.recordNumber() + ":" + failure.type() + ":"
+                                        + failure.message())))
                 .containsInAnyOrder("2:" + FailureType.VALIDATION_ERROR
                         + ":employee_id must be exactly 7 characters (found 2)");
 

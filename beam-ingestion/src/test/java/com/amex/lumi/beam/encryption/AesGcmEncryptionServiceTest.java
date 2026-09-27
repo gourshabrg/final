@@ -3,6 +3,7 @@ package com.amex.lumi.beam.encryption;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,7 +41,7 @@ class AesGcmEncryptionServiceTest {
 
     @Test
     void blankValueCannotBeDecrypted() {
-        assertThrows(IllegalArgumentException.class, () -> service.decrypt(" "));
+        assertThrows(EncryptionException.class, () -> service.decrypt(" "));
     }
 
     @Test
@@ -53,6 +54,16 @@ class AesGcmEncryptionServiceTest {
         String encrypted = service.encrypt("950000");
 
         assertThrows(EncryptionException.class, () -> service.decrypt(encrypted.replace("v1:", "v2:")));
+    }
+
+    @Test
+    void randomBase64KeyWorksAndIsNotATypedKey() {
+        String randomKey = "q83vEjRWeJq83vEjRWeJq83vEjRWeJq83vEjRWeJq80=";
+        AesGcmEncryptionService random = AesGcmEncryptionService.fromKey(randomKey);
+
+        assertEquals("950000", random.decrypt(random.encrypt("950000")));
+        assertFalse(AesGcmEncryptionService.isTypedKey(randomKey));
+        assertTrue(AesGcmEncryptionService.isTypedKey("0123456789abcdef0123456789abcdef"));
     }
 
     @Test

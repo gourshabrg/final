@@ -3,7 +3,7 @@ package com.amex.lumi.beam.model;
 import java.io.Serializable;
 
 /**
- * An employee ready to save. Phone, salary and emergency phone are saved from the encrypted fields, never the plain ones.
+ * An employee ready to save; sensitive fields are saved only in encrypted form.
  */
 public record EncryptedEmployee(
         EnrichedEmployee enriched,
@@ -21,6 +21,10 @@ public record EncryptedEmployee(
 
     public String sourceFile() {
         return enriched.parsed().sourceFile();
+    }
+
+    public String splitFile() {
+        return enriched.parsed().splitFile();
     }
 
     public String executionId() {

@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -66,6 +67,7 @@ class IngestionControllerTest {
 
         mockMvc.perform(post("/api/v1/ingestions").contentType(MediaType.APPLICATION_JSON).content(VALID_BODY))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
                 .andExpect(jsonPath("$.message").value("Data file is empty"));
     }
 
@@ -95,7 +97,8 @@ class IngestionControllerTest {
                 .thenThrow(new AirflowTriggerException("Unable to trigger Airflow DAG", null));
 
         mockMvc.perform(post("/api/v1/ingestions").contentType(MediaType.APPLICATION_JSON).content(VALID_BODY))
-                .andExpect(status().isBadGateway());
+                .andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.code").value("AIRFLOW_UNAVAILABLE"));
     }
 
     @Test
@@ -110,11 +113,31 @@ class IngestionControllerTest {
 
         mockMvc.perform(post("/api/v1/ingestions").contentType(MediaType.APPLICATION_JSON).content(VALID_BODY))
                 .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"))
                 .andExpect(jsonPath("$.message").value("An unexpected error occurred"));
     }
 
     @Test
     void invalidExecutionIdReturns400() throws Exception {
         mockMvc.perform(get("/api/v1/ingestions/not-a-uuid")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void unknownUrlReturns404NotA500() throws Exception {
+        mockMvc.perform(get("/api/v1/nothing-here"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("ENDPOINT_NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("No endpoint GET /api/v1/nothing-here"));
+    }
+
+    @Test
+    void wrongMethodReturns405() throws Exception {
+        mockMvc.perform(delete("/api/v1/ingestions")).andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    void wrongContentTypeReturns415() throws Exception {
+        mockMvc.perform(post("/api/v1/ingestions").contentType(MediaType.TEXT_PLAIN).content("x"))
+                .andExpect(status().isUnsupportedMediaType());
     }
 }

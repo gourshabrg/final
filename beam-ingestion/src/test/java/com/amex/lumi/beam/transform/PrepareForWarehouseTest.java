@@ -27,8 +27,8 @@ class PrepareForWarehouseTest {
     @Test
     void fillsMissingValuesAddsMetadataAndEncrypts() {
         EmployeeRecord employee = TestEmployees.valid();
-        employee.setLastName(null);
-        employee.setSalary(null);
+        employee = employee.toBuilder().lastName(null).build();
+        employee = employee.toBuilder().salary(null).build();
 
         Pipeline pipeline = Pipeline.create();
         PCollection<EncryptedEmployee> rows = pipeline

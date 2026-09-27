@@ -26,8 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 
 /**
- * Reads one file, or all split files matching a pattern like *.csv.
- * Good records go to PARSED, records that cannot be read go to PARSE_FAILURES.
+ * Reads one file or all split files; bad records go to PARSE_FAILURES.
  */
 public class ReadEmployeeFiles extends PTransform<PBegin, PCollectionTuple> {
 
@@ -37,11 +36,20 @@ public class ReadEmployeeFiles extends PTransform<PBegin, PCollectionTuple> {
     };
 
     private final String filePattern;
+    // The user's file when filePattern points to PySpark split files, otherwise null.
+    private final String originalFile;
     private final FileType fileType;
     private final String executionId;
 
+    /** Reading the user's file directly (no split). */
     public ReadEmployeeFiles(String filePattern, FileType fileType, String executionId) {
+        this(filePattern, filePattern, fileType, executionId);
+    }
+
+    /** originalFile: the file the user sent, which PySpark may have split into filePattern. */
+    public ReadEmployeeFiles(String filePattern, String originalFile, FileType fileType, String executionId) {
         this.filePattern = filePattern;
+        this.originalFile = originalFile == null || originalFile.equals(filePattern) ? null : originalFile;
         this.fileType = fileType;
         this.executionId = executionId;
     }
@@ -52,15 +60,18 @@ public class ReadEmployeeFiles extends PTransform<PBegin, PCollectionTuple> {
                 .apply("MatchInputFiles", FileIO.match().filepattern(filePattern))
                 .apply("OpenInputFiles", FileIO.readMatches())
                 .apply("Parse" + fileType.name() + "Records",
-                        ParDo.of(new ParseFileFn(EmployeeFileParsers.forType(fileType), fileType, executionId))
+                        ParDo.of(new ParseFileFn(EmployeeFileParsers.forType(fileType), fileType, executionId,
+                                originalFile))
                                 .withOutputTags(PARSED, TupleTagList.of(PARSE_FAILURES)));
     }
 
-    /** Parses one file and numbers its records 1, 2, 3... */
+    /** Parses one file. Records are numbered 1, 2, 3... or take their number from the split file. */
     static class ParseFileFn extends DoFn<FileIO.ReadableFile, ParsedEmployee> {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(ParseFileFn.class);
         private static final char BYTE_ORDER_MARK = '\uFEFF';
+        // record_number 0 = the error is about the whole file, not one record.
+        private static final long FILE_LEVEL_RECORD_NUMBER = 0;
 
         private final Counter parsed = IngestionMetrics.counter(IngestionMetrics.RECORDS_PARSED);
         private final Counter parseErrors = IngestionMetrics.counter(IngestionMetrics.PARSE_ERRORS);
@@ -68,31 +79,36 @@ public class ReadEmployeeFiles extends PTransform<PBegin, PCollectionTuple> {
         private final EmployeeFileParser parser;
         private final FileType fileType;
         private final String executionId;
+        private final String originalFile;
 
-        ParseFileFn(EmployeeFileParser parser, FileType fileType, String executionId) {
+        ParseFileFn(EmployeeFileParser parser, FileType fileType, String executionId, String originalFile) {
             this.parser = parser;
             this.fileType = fileType;
             this.executionId = executionId;
+            this.originalFile = originalFile;
         }
 
         @ProcessElement
         public void processElement(@Element FileIO.ReadableFile file, MultiOutputReceiver out) throws IOException {
-            String sourceFile = file.getMetadata().resourceId().toString();
+            String readFile = file.getMetadata().resourceId().toString();
+            // Split run: report the user's file, keep the part file to find the exact row.
+            String sourceFile = originalFile != null ? originalFile : readFile;
+            String splitFile = originalFile != null ? readFile : null;
             // source_creation_time = time the file was parsed.
             Instant parsedAt = Instant.now();
-            LOGGER.info("Parsing {} file: {}", fileType, sourceFile);
+            LOGGER.info("Parsing {} file: {}", fileType, readFile);
 
-            FileEmitter emitter = new FileEmitter(sourceFile, parsedAt, out);
+            FileEmitter emitter = new FileEmitter(sourceFile, splitFile, parsedAt, out);
             try (Reader reader = skipByteOrderMark(
                     Channels.newReader(file.open(), StandardCharsets.UTF_8))) {
                 parser.parse(reader, emitter);
             }
 
             LOGGER.info("Finished parsing {}: {} record(s) read, {} could not be parsed",
-                    sourceFile, emitter.goodRecords, emitter.badRecords);
+                    readFile, emitter.goodRecords, emitter.badRecords);
         }
 
-        // Files saved on Windows may start with an invisible character (BOM) that would break the first header name.
+        // Skip the Windows BOM, which would break the first header name.
         private static Reader skipByteOrderMark(Reader reader) throws IOException {
             PushbackReader pushback = new PushbackReader(reader, 1);
             int first = pushback.read();
@@ -106,34 +122,51 @@ public class ReadEmployeeFiles extends PTransform<PBegin, PCollectionTuple> {
         private final class FileEmitter implements RecordHandler {
 
             private final String sourceFile;
+            private final String splitFile;
             private final Instant parsedAt;
             private final MultiOutputReceiver out;
-            private long recordNumber;
+            private long positionInFile;
             private long goodRecords;
             private long badRecords;
 
-            FileEmitter(String sourceFile, Instant parsedAt, MultiOutputReceiver out) {
+            FileEmitter(String sourceFile, String splitFile, Instant parsedAt, MultiOutputReceiver out) {
                 this.sourceFile = sourceFile;
+                this.splitFile = splitFile;
                 this.parsedAt = parsedAt;
                 this.out = out;
             }
 
             @Override
-            public void onRecord(EmployeeRecord employee) {
-                recordNumber++;
+            public void onRecord(EmployeeRecord employee, Long sourceRecordNumber) {
+                long recordNumber = nextRecordNumber(sourceRecordNumber);
                 goodRecords++;
                 parsed.inc();
-                out.get(PARSED).output(new ParsedEmployee(recordNumber, sourceFile, parsedAt, employee));
+                out.get(PARSED).output(new ParsedEmployee(recordNumber, sourceFile, splitFile, parsedAt, employee));
             }
 
             @Override
-            public void onError(String reason) {
-                recordNumber++;
+            public void onError(String reason, Long sourceRecordNumber) {
+                long recordNumber = nextRecordNumber(sourceRecordNumber);
                 badRecords++;
                 parseErrors.inc();
                 LOGGER.warn("Record {} in {} could not be parsed: {}", recordNumber, sourceFile, reason);
-                out.get(PARSE_FAILURES).output(new RecordFailure(
-                        recordNumber, sourceFile, executionId, FailureType.PARSE_ERROR, reason, null));
+                out.get(PARSE_FAILURES).output(new RecordFailure(recordNumber, sourceFile, splitFile,
+                        executionId, FailureType.PARSE_ERROR, reason, null));
+            }
+
+            @Override
+            public void onFileError(String reason) {
+                badRecords++;
+                parseErrors.inc();
+                LOGGER.warn("Rest of {} could not be read: {}", sourceFile, reason);
+                out.get(PARSE_FAILURES).output(new RecordFailure(FILE_LEVEL_RECORD_NUMBER, sourceFile, splitFile,
+                        executionId, FailureType.PARSE_ERROR, reason, null));
+            }
+
+            // Position in the original file when PySpark wrote it, otherwise position in this file.
+            private long nextRecordNumber(Long sourceRecordNumber) {
+                positionInFile++;
+                return sourceRecordNumber != null ? sourceRecordNumber : positionInFile;
             }
         }
     }

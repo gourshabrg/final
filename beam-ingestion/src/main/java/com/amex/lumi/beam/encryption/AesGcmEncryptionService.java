@@ -9,9 +9,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * Encrypts values with AES-256-GCM. The result is text like {@code v1:<iv>:<encrypted value>}.
- * A new random IV (starting value) is used every time, so the same salary never looks the same twice.
- * The Spring Boot API decrypts with the same key.
+ * AES-256-GCM encryption as {@code v1:<iv>:<encrypted value>}, with a new random IV each time.
  */
 public class AesGcmEncryptionService implements EncryptionService {
 
@@ -19,30 +17,54 @@ public class AesGcmEncryptionService implements EncryptionService {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String VERSION = "v1";
     private static final int KEY_SIZE_BYTES = 32;
+    private static final int BASE64_KEY_LENGTH = 44;
     private static final int IV_SIZE_BYTES = 12;
     private static final int TAG_LENGTH_BITS = 128;
 
     private final SecretKeySpec secretKey;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    public AesGcmEncryptionService(byte[] key) {
-        if (key == null || key.length != KEY_SIZE_BYTES) {
-            throw new IllegalArgumentException("AES-256 key must be exactly " + KEY_SIZE_BYTES + " bytes");
-        }
+    private AesGcmEncryptionService(byte[] key) {
         this.secretKey = new SecretKeySpec(key, ALGORITHM);
     }
 
-    /** Key must be 32 characters (32 bytes). */
+    /** Key: 32 random bytes in base64 (recommended, e.g. openssl rand -base64 32) or 32 typed characters. */
     public static AesGcmEncryptionService fromKey(String key) {
+        return new AesGcmEncryptionService(keyBytes(key));
+    }
+
+    /** True for a 32-character typed key: it works, but has far fewer possible values than 32 random bytes. */
+    public static boolean isTypedKey(String key) {
+        return decodeBase64Key(key) == null;
+    }
+
+    private static byte[] keyBytes(String key) {
         if (key == null || key.isBlank()) {
             throw new IllegalArgumentException("Encryption key must not be blank");
         }
+        byte[] decoded = decodeBase64Key(key);
+        if (decoded != null) {
+            return decoded;
+        }
         byte[] bytes = key.getBytes(StandardCharsets.UTF_8);
         if (bytes.length != KEY_SIZE_BYTES) {
-            throw new IllegalArgumentException("LUMI_ENCRYPTION_KEY must be exactly " + KEY_SIZE_BYTES
-                    + " bytes but is " + bytes.length);
+            throw new IllegalArgumentException("LUMI_ENCRYPTION_KEY must be 32 bytes in base64 or exactly "
+                    + KEY_SIZE_BYTES + " characters, but is " + bytes.length + " characters");
         }
-        return new AesGcmEncryptionService(bytes);
+        return bytes;
+    }
+
+    // A 32-byte base64 key is 44 characters, so it never looks like a typed key.
+    private static byte[] decodeBase64Key(String key) {
+        if (key == null || key.length() != BASE64_KEY_LENGTH) {
+            return null;
+        }
+        try {
+            byte[] decoded = Base64.getDecoder().decode(key);
+            return decoded.length == KEY_SIZE_BYTES ? decoded : null;
+        } catch (IllegalArgumentException notBase64) {
+            return null;
+        }
     }
 
     @Override
@@ -68,7 +90,7 @@ public class AesGcmEncryptionService implements EncryptionService {
     @Override
     public String decrypt(String encryptedText) {
         if (encryptedText == null || encryptedText.isBlank()) {
-            throw new IllegalArgumentException("encryptedText must not be null or blank");
+            throw new EncryptionException("Unable to decrypt value: it is empty");
         }
         try {
             String[] parts = encryptedText.split(":", -1);

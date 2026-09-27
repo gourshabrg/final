@@ -3,6 +3,7 @@ package com.amex.lumi.beam.model;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -76,11 +77,19 @@ class ModelTest {
 
     @Test
     void employeeToStringHidesSensitiveFields() {
-        EmployeeRecord employee = new EmployeeRecord();
-        employee.setEmployeeId("EMP0001");
-        employee.setSalary(950000L);
-        employee.setPhoneNumber("9876543210");
+        EmployeeRecord employee = EmployeeRecord.builder()
+                .employeeId("EMP0001").salary(950000L).phoneNumber("9876543210").build();
 
         assertEquals("EmployeeRecord{employeeId='EMP0001'}", employee.toString());
+    }
+
+    @Test
+    void employeeCannotBeChangedAfterItIsBuilt() {
+        EmployeeRecord original = EmployeeRecord.builder().employeeId("EMP0001").skills(List.of("Java")).build();
+        EmployeeRecord changed = original.toBuilder().employeeId("EMP0002").build();
+
+        assertEquals("EMP0001", original.getEmployeeId());
+        assertEquals("EMP0002", changed.getEmployeeId());
+        assertThrows(UnsupportedOperationException.class, () -> original.getSkills().add("SQL"));
     }
 }

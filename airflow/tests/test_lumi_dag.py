@@ -2,10 +2,13 @@
 Tests for the DAG and its task functions. Run inside the scheduler container:
     docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/airflow/tests -v
 """
+import json
 import os
+import re
 import sys
 import tempfile
 import unittest
+from datetime import timedelta
 from types import SimpleNamespace
 from unittest import mock
 
@@ -59,8 +62,41 @@ class DagStructureTest(unittest.TestCase):
         self.assertEqual(0, dag.get_task("run_beam_pipeline").retries)
         self.assertEqual(0, dag.get_task("check_execution_status").retries)
 
+    def test_long_running_jobs_have_a_timeout(self):
+        dag = self.dag_bag.dags[DAG_ID]
+        self.assertEqual(timedelta(minutes=30), dag.get_task("run_pyspark_split").execution_timeout)
+        self.assertEqual(timedelta(hours=1), dag.get_task("run_beam_pipeline").execution_timeout)
+
+    def test_status_check_also_runs_after_a_failure(self):
+        dag = self.dag_bag.dags[DAG_ID]
+        self.assertEqual("all_done", dag.get_task("check_execution_status").trigger_rule)
+
+    def test_dag_failure_is_recorded(self):
+        self.assertIs(tasks.on_dag_failure, self.dag_bag.dags[DAG_ID].on_failure_callback)
+
     def test_dag_only_runs_when_triggered(self):
         self.assertIsNone(self.dag_bag.dags[DAG_ID].schedule_interval)
+
+
+class ContractTest(unittest.TestCase):
+    """The DAG must accept exactly what the API sends (see contracts/lumi-contract.json)."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open("/opt/lumi/contracts/lumi-contract.json", encoding="utf-8") as file:
+            cls.contract = json.load(file)
+
+    def test_file_types_match(self):
+        self.assertEqual(tuple(self.contract["file_types"]), tasks.SUPPORTED_FILE_TYPES)
+
+    def test_required_parameters_match(self):
+        self.assertEqual(tuple(self.contract["dag_run_conf"]["required"]), tasks.REQUIRED_CONF_KEYS)
+
+    def test_dag_only_reads_parameters_the_api_sends(self):
+        from lumi_ingestion_orchestrator import RUN_ENV
+        used = set(re.findall(r"dag_run\.conf(?:\['|\.get\(')(\w+)'", " ".join(RUN_ENV.values())))
+        self.assertTrue(used)
+        self.assertLessEqual(used, set(self.contract["dag_run_conf"]["all"]))
 
 
 class TaskFunctionTest(unittest.TestCase):
@@ -92,6 +128,11 @@ class TaskFunctionTest(unittest.TestCase):
         with self.assertRaisesRegex(AirflowException, "Unsupported file_type"):
             tasks.validate_request(**context_for(self.conf))
 
+    def test_requires_split_as_text_fails(self):
+        self.conf["requires_split"] = "false"
+        with self.assertRaisesRegex(AirflowException, "requires_split must be true or false"):
+            tasks.validate_request(**context_for(self.conf))
+
     def test_file_not_visible_in_container_fails(self):
         self.conf["input_file"] = "/nope/employees.csv"
         with self.assertRaisesRegex(AirflowException, "not found inside Airflow"):
@@ -119,6 +160,22 @@ class TaskFunctionTest(unittest.TestCase):
         with mock.patch.object(tasks, "read_execution_summary", return_value=None):
             with self.assertRaisesRegex(AirflowException, "No ingestion_execution row"):
                 tasks.check_execution_status(**context_for(self.conf))
+
+    def test_failed_dag_marks_the_run_failed_in_the_database(self):
+        conf = dict(self.conf, execution_id="11111111-1111-1111-1111-111111111111")
+        dag_run = SimpleNamespace(conf=conf, get_task_instances=lambda state: [SimpleNamespace(task_id="run_beam")])
+        with mock.patch.object(tasks, "PostgresHook") as hook:
+            tasks.on_dag_failure({"dag_run": dag_run})
+        sql, = hook.return_value.run.call_args.args
+        self.assertIn("ON CONFLICT (execution_id)", sql)
+        self.assertEqual(("11111111-1111-1111-1111-111111111111", self.input_file,
+                          "Airflow task(s) failed: run_beam"), hook.return_value.run.call_args.kwargs["parameters"])
+
+    def test_failure_callback_ignores_a_run_without_valid_execution_id(self):
+        dag_run = SimpleNamespace(conf={"execution_id": "not-a-uuid"}, get_task_instances=lambda state: [])
+        with mock.patch.object(tasks, "PostgresHook") as hook:
+            tasks.on_dag_failure({"dag_run": dag_run})
+        hook.assert_not_called()
 
     def test_finalize_reads_counts_from_xcom(self):
         with self.assertLogs("lumi.ingestion", level="INFO") as logs:

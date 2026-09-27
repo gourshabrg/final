@@ -3,6 +3,7 @@ package com.amex.lumi.ingestion.service;
 import com.amex.lumi.ingestion.config.EncryptionProperties;
 import com.amex.lumi.ingestion.dto.EmployeeResponse;
 import com.amex.lumi.ingestion.exception.ResourceNotFoundException;
+import com.amex.lumi.ingestion.exception.ServerDataException;
 import com.amex.lumi.ingestion.repository.EmployeeRepository;
 import com.amex.lumi.ingestion.repository.EmployeeRow;
 import com.amex.lumi.ingestion.security.FieldDecryptor;
@@ -48,6 +49,16 @@ class EmployeeServiceTest {
         assertThat(employee.emergencyContact().phone()).isEqualTo("9876543211");
         assertThat(employee.skills()).isEqualTo(List.of("Python", "Docker"));
         assertThat(employee.address().postalCode()).isEqualTo("560100");
+    }
+
+    @Test
+    void corruptStoredValueIsAServerErrorNotABadRequest() {
+        String otherKey = TestCipher.encrypt("950000", "ffffffffffffffffffffffffffffffff");
+        when(repository.findById("EMP0001")).thenReturn(Optional.of(row(null, otherKey, null, null, null)));
+
+        assertThatThrownBy(() -> service.getDecryptedEmployee("EMP0001"))
+                .isInstanceOf(ServerDataException.class)
+                .hasMessage("Stored data for employee EMP0001 could not be read");
     }
 
     @Test

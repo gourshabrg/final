@@ -42,7 +42,8 @@ class IngestionPathResolverTest {
     void pathEscapingTheRootIsRejected() {
         assertThatThrownBy(() -> resolver().resolveDataFile("../secrets.csv"))
                 .isInstanceOf(InvalidRequestException.class)
-                .hasMessageContaining("must be inside");
+                .hasMessageContaining("must be inside")
+                .hasMessageNotContaining(tempDir.toString());
     }
 
     @Test

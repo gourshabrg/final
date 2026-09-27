@@ -14,10 +14,10 @@ class MissingValueCleanserTest {
     @Test
     void replacesMissingTextWithWhitespace() {
         EmployeeRecord employee = TestEmployees.valid();
-        employee.setLastName(null);
-        employee.setDepartment("");
-        employee.setAddress(null);
-        employee.setSkills(null);
+        employee = employee.toBuilder().lastName(null).build();
+        employee = employee.toBuilder().department("").build();
+        employee = employee.toBuilder().address(null).build();
+        employee = employee.toBuilder().skills(null).build();
 
         EmployeeRecord cleaned = MissingValueCleanser.cleanse(employee);
 
@@ -30,8 +30,8 @@ class MissingValueCleanserTest {
     @Test
     void leavesNonTextFieldsAndOriginalUntouched() {
         EmployeeRecord employee = TestEmployees.valid();
-        employee.setSalary(null);
-        employee.setLastName(null);
+        employee = employee.toBuilder().salary(null).build();
+        employee = employee.toBuilder().lastName(null).build();
 
         EmployeeRecord cleaned = MissingValueCleanser.cleanse(employee);
 
@@ -43,7 +43,7 @@ class MissingValueCleanserTest {
     @Test
     void missingEmergencyContactGetsWhitespaceFields() {
         EmployeeRecord employee = TestEmployees.valid();
-        employee.setEmergencyContact(null);
+        employee = employee.toBuilder().emergencyContact(null).build();
 
         EmployeeRecord cleaned = MissingValueCleanser.cleanse(employee);
 

@@ -19,6 +19,7 @@ import java.time.Duration;
 public class AirflowRestClient implements AirflowClient {
 
     private static final String DAG_RUNS_PATH = "/api/v1/dags/{dagId}/dagRuns";
+    static final String CLIENT_MESSAGE = "Airflow is not reachable or refused the run; try again later";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AirflowRestClient.class);
 
@@ -51,8 +52,8 @@ public class AirflowRestClient implements AirflowClient {
                     .toBodilessEntity();
         } catch (RestClientException exception) {
             LOGGER.error("Airflow rejected or did not answer DAG run {}", request.dagRunId(), exception);
-            throw new AirflowTriggerException("Unable to trigger Airflow DAG " + dagId + ": "
-                    + exception.getMessage(), exception);
+            // Airflow's own error text stays in the log above; the client gets a fixed message.
+            throw new AirflowTriggerException(CLIENT_MESSAGE, exception);
         }
         LOGGER.info("Airflow accepted DAG run {}", request.dagRunId());
     }

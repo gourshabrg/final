@@ -8,8 +8,9 @@ spring:
       - optional:file:.env[.properties]
   datasource:
     url: ${LUMI_WAREHOUSE_JDBC_URL:jdbc:postgresql://localhost:5432/warehouse}
-    username: ${LUMI_WAREHOUSE_USERNAME:airflow}
-    password: ${LUMI_WAREHOUSE_PASSWORD:airflow}
+    # Same variables as docker-compose.yml, so credentials are set once in .env.
+    username: ${LUMI_WAREHOUSE_USERNAME:${POSTGRES_USER:airflow}}
+    password: ${LUMI_WAREHOUSE_PASSWORD:${POSTGRES_PASSWORD:airflow}}
     hikari:
       data-source-properties:
         options: "-c TimeZone=UTC"
@@ -30,8 +31,8 @@ lumi:
 
   airflow:
     base-url: ${AIRFLOW_BASE_URL:http://localhost:8082}
-    username: ${AIRFLOW_USERNAME:airflow}
-    password: ${AIRFLOW_PASSWORD:airflow}
+    username: ${AIRFLOW_USERNAME:${AIRFLOW_ADMIN_USERNAME:airflow}}
+    password: ${AIRFLOW_PASSWORD:${AIRFLOW_ADMIN_PASSWORD:airflow}}
     dag-id: lumi_ingestion_orchestrator
     connect-timeout-seconds: 5
     read-timeout-seconds: 15

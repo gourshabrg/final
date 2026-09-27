@@ -24,17 +24,24 @@ public class PrepareForWarehouse extends PTransform<PCollection<ParsedEmployee>,
 
     private final String executionId;
     private final String encryptionKey;
+    private final Instant sourceModifiedAt;
 
     public PrepareForWarehouse(String executionId, String encryptionKey) {
+        this(executionId, encryptionKey, null);
+    }
+
+    /** sourceModifiedAt: last-modified time of the user's file, or null when unknown. */
+    public PrepareForWarehouse(String executionId, String encryptionKey, Instant sourceModifiedAt) {
         this.executionId = executionId;
         this.encryptionKey = encryptionKey;
+        this.sourceModifiedAt = sourceModifiedAt;
     }
 
     @Override
     public PCollection<EncryptedEmployee> expand(PCollection<ParsedEmployee> valid) {
         return valid
                 .apply("ReplaceMissingValues", ParDo.of(new ReplaceMissingValuesFn()))
-                .apply("AddMetadataColumns", ParDo.of(new AddMetadataFn(executionId)))
+                .apply("AddMetadataColumns", ParDo.of(new AddMetadataFn(executionId, sourceModifiedAt)))
                 .apply("EncryptSensitiveFields", ParDo.of(new EncryptFieldsFn(encryptionKey)));
     }
 
@@ -42,21 +49,23 @@ public class PrepareForWarehouse extends PTransform<PCollection<ParsedEmployee>,
         @ProcessElement
         public void processElement(@Element ParsedEmployee record, OutputReceiver<ParsedEmployee> out) {
             out.output(new ParsedEmployee(record.recordNumber(), record.sourceFile(),
-                    record.sourceCreationTime(), MissingValueCleanser.cleanse(record.employee())));
+                    record.splitFile(), record.sourceCreationTime(), MissingValueCleanser.cleanse(record.employee())));
         }
     }
 
     static class AddMetadataFn extends DoFn<ParsedEmployee, EnrichedEmployee> {
 
         private final String executionId;
+        private final Instant sourceModifiedAt;
 
-        AddMetadataFn(String executionId) {
+        AddMetadataFn(String executionId, Instant sourceModifiedAt) {
             this.executionId = executionId;
+            this.sourceModifiedAt = sourceModifiedAt;
         }
 
         @ProcessElement
         public void processElement(@Element ParsedEmployee record, OutputReceiver<EnrichedEmployee> out) {
-            out.output(new EnrichedEmployee(record, executionId, Instant.now()));
+            out.output(new EnrichedEmployee(record, executionId, Instant.now(), sourceModifiedAt));
         }
     }
 

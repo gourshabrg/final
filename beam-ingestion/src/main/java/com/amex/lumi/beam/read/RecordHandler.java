@@ -3,12 +3,14 @@ package com.amex.lumi.beam.read;
 import com.amex.lumi.beam.model.EmployeeRecord;
 
 /**
- * Receives each record a parser finds, in file order.
+ * Receives each record in file order; reasons must not contain field values.
  */
 public interface RecordHandler {
 
-    void onRecord(EmployeeRecord employee);
+    void onRecord(EmployeeRecord employee, Long sourceRecordNumber);
 
-    /** The reason must not contain field values (it is logged). */
-    void onError(String reason);
+    void onError(String reason, Long sourceRecordNumber);
+
+    /** The rest of the file cannot be read (e.g. broken JSON array); records already sent stay valid. */
+    void onFileError(String reason);
 }

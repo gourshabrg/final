@@ -11,6 +11,7 @@ public final class DagRunConfKeys {
     public static final String CONTROL_FILE = "control_file";
     public static final String EXPECTED_RECORD_COUNT = "expected_record_count";
     public static final String FILE_SIZE_BYTES = "file_size_bytes";
+    public static final String FILE_SHA256 = "file_sha256";
     public static final String FILE_SIZE_THRESHOLD_BYTES = "file_size_threshold_bytes";
     public static final String REQUIRES_SPLIT = "requires_split";
     public static final String SPLIT_OUTPUT_DIR = "split_output_dir";

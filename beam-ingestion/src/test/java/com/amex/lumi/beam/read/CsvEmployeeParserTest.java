@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,5 +84,61 @@ class CsvEmployeeParserTest {
         RecordCollector result = parse(header + "\n" + row);
 
         assertNull(result.records.get(0).getDepartment());
+    }
+
+    @Test
+    void splitFileRecordKeepsItsNumberFromTheOriginalFile() throws IOException {
+        RecordCollector result = parse(TestEmployees.CSV_HEADER + ",source_record_number\n"
+                + TestEmployees.CSV_ROW + ",87\n");
+
+        assertEquals(List.of(87L), result.recordNumbers);
+        assertEquals("EMP0001", result.records.get(0).getEmployeeId());
+    }
+
+    @Test
+    void fileWithoutTheColumnHasNoOriginalNumber() throws IOException {
+        RecordCollector result = parse(TestEmployees.CSV_HEADER + "\n" + TestEmployees.CSV_ROW + "\n");
+
+        assertEquals(Collections.singletonList(null), result.recordNumbers);
+    }
+
+    @Test
+    void badRowInSplitFileKeepsItsNumber() throws IOException {
+        String badSalary = TestEmployees.CSV_ROW.replace(",950000,", ",lots,");
+        RecordCollector result = parse(TestEmployees.CSV_HEADER + ",source_record_number\n" + badSalary + ",12\n"
+                + "EMP0002,too,few\n");
+
+        assertEquals(List.of(12L), result.errorNumbers.subList(0, 1));
+        // Too short to reach the number column: no original number.
+        assertNull(result.errorNumbers.get(1));
+    }
+
+    @Test
+    void missingRequiredColumnIsOneFileErrorNotAnErrorPerRow() throws IOException {
+        String header = TestEmployees.CSV_HEADER.replace(",email,", ",emial,");
+        RecordCollector result = parse(header + "\n" + TestEmployees.CSV_ROW + "\n" + TestEmployees.CSV_ROW + "\n");
+
+        assertEquals(List.of("CSV header is missing required column(s): email"), result.fileErrors);
+        assertEquals(List.of(), result.records);
+        assertEquals(List.of(), result.errors);
+    }
+
+    @Test
+    void unknownColumnIsIgnored() throws IOException {
+        RecordCollector result = parse(TestEmployees.CSV_HEADER + ",notes\n" + TestEmployees.CSV_ROW + ",hello\n");
+
+        assertEquals(List.of(TestEmployees.valid()), result.records);
+    }
+
+    @Test
+    void rowMarkedCorruptBySparkIsAParseError() throws IOException {
+        String header = TestEmployees.CSV_HEADER + ",_corrupt_record,source_record_number\n";
+        RecordCollector result = parse(header
+                + TestEmployees.CSV_ROW + ",,1\n"
+                + TestEmployees.CSV_ROW.replace("EMP0001", "EMP0002") + ",\"EMP0002,raw,row\",2\n");
+
+        assertEquals(1, result.records.size());
+        assertEquals(List.of(CsvEmployeeParser.SPARK_CORRUPT_ROW), result.errors);
+        assertEquals(List.of(2L), result.errorNumbers);
     }
 }

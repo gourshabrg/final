@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * lumi.encryption.key - must be the same 32-character key the Beam job uses.
+ * lumi.encryption.key - must be the same key the Beam job uses (32 bytes in base64, or 32 characters).
  */
 @Validated
 @ConfigurationProperties(prefix = "lumi.encryption")

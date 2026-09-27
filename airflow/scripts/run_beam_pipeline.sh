@@ -24,15 +24,25 @@ else
     log "reading original file: ${BEAM_INPUT}"
 fi
 
+# Only sent by the API; a DAG run started by hand skips these checks.
+EXTRA_ARGS=()
+if [ -n "${FILE_SHA256:-}" ]; then
+    EXTRA_ARGS+=("--expectedSha256=${FILE_SHA256}")
+fi
+if [ -n "${EXPECTED_RECORD_COUNT:-}" ]; then
+    EXTRA_ARGS+=("--expectedRecordCount=${EXPECTED_RECORD_COUNT}")
+fi
+
 java -jar "${BEAM_JAR}" \
+    "${EXTRA_ARGS[@]}" \
     --inputFile="${BEAM_INPUT}" \
+    --originalFile="${INPUT_FILE}" \
     --fileType="${FILE_TYPE}" \
     --executionId="${EXECUTION_ID}" \
     --controlFile="${CONTROL_FILE}" \
     --errorOutput="${ERROR_OUTPUT}" \
-    --encryptionKey="${LUMI_ENCRYPTION_KEY}" \
     --jdbcUrl="${LUMI_WAREHOUSE_JDBC_URL}" \
-    --jdbcUsername="${LUMI_WAREHOUSE_USERNAME}" \
-    --jdbcPassword="${LUMI_WAREHOUSE_PASSWORD}"
+    --jdbcUsername="${LUMI_WAREHOUSE_USERNAME}"
+# Key and DB password come from env vars, not arguments (visible in ps).
 
 log "finished; errors (if any) in ${ERROR_OUTPUT}.txt"

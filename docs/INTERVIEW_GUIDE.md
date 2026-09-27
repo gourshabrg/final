@@ -93,7 +93,9 @@ PySpark → **Dataproc**, local folders → **GCS**, PostgreSQL → **BigQuery**
    - `IngestionPathResolver` turns the relative path into a full path and **rejects paths outside `data/`**
      (so `../../secret.txt` cannot be read).
    - `SourceFileValidator` checks the file exists, is readable, not empty, and has the right extension.
-   - `ControlFileValidator` checks `record_count` exists and is a non-negative number.
+   - `FileChecksum` computes the data file's **sha256** (its fingerprint).
+   - `ControlFileValidator` checks `record_count` exists and is a non-negative number, and, when the control file
+     has them, that `file_name` and `sha256` match the data file (so a control file cannot be paired with the wrong file).
 4. The service creates the **execution ID** with `UUID.randomUUID()`.
 5. **Split decision**: `fileSize > threshold`. The threshold is in `application.yml` (Phase 2 requirement).
 6. `DagRunRequestFactory` builds `dag_run.conf` with the container paths, the split folder and the error file prefix.
@@ -128,8 +130,10 @@ logging/     RequestLoggingFilter
 ```java
 Path dataFile = paths.resolveDataFile(request.fileLocation());        // relative -> absolute, must stay inside data/
 Path controlFile = paths.resolveControlFile(request.controlFileLocation());
-long fileSize = sourceFileValidator.validate(dataFile, request.fileType()); // exists, readable, extension, not empty
-long expectedRecords = controlFileValidator.validate(controlFile);    // record_count must be a number >= 0
+long fileSize = sourceFileValidator.validate(dataFile, request.fileLocation(), request.fileType()); // exists, extension, not empty
+String sha256 = FileChecksum.sha256(dataFile);                         // fingerprint now; Beam checks it again later
+long expectedRecords = controlFileValidator.validate(controlFile, request.controlFileLocation(),
+        dataFile.getFileName().toString(), sha256);                    // record_count >= 0, file_name + sha256 match
 
 UUID executionId = UUID.randomUUID();                                  // one ID for the whole run (requirement)
 boolean requiresSplit = fileSize > thresholdBytes;                     // Phase 2: big files are split first
@@ -155,10 +159,10 @@ Beam checks the *records* (is this email valid?). Failing fast in the API saves 
 | `DagRunRequestFactory` | Builds `dag_run.conf`. Spring passes `split_output_dir` to the DAG, which is the Phase 2 requirement "pass the split location as DAG parameters". |
 | `AirflowRestClient` | `RestClient` with basic auth and **timeouts**. Without timeouts, a hung Airflow would block API threads forever. |
 | `AirflowClient` (interface) | Lets tests replace Airflow with a mock (`IngestionServiceTest`). |
-| `GlobalExceptionHandler` | `@RestControllerAdvice`: one place that maps exceptions to 400 / 404 / 502 / 500 with the same JSON shape. |
+| `GlobalExceptionHandler` | `@RestControllerAdvice`: one place that maps exceptions to a status and a stable `code` with the same JSON shape. All our exceptions extend `LumiException`, which carries an `ErrorCode` (enum of code + HTTP status), so one handler covers them all. |
 | `RequestLoggingFilter` | Adds a `requestId` to every log line and logs `POST /api/v1/ingestions -> 202 (35 ms)`. |
 | `*Properties` records | `@ConfigurationProperties` + `@Validated`: the app refuses to start with missing config. |
-| `FieldDecryptor` | AES-256-GCM decryption. Checks the key is **exactly 32 bytes at startup** (fail fast). |
+| `FieldDecryptor` | AES-256-GCM decryption. Checks the key at startup (fail fast): 32 random bytes in base64 (recommended) or 32 typed characters (warning). |
 | `EmployeeService` | Reads the row, decrypts phone / salary / emergency phone, logs *who* was decrypted (never the values). |
 
 ### 5.3 HTTP status codes used
@@ -166,10 +170,15 @@ Beam checks the *records* (is this email valid?). Failing fast in the API saves 
 | Code | When |
 |---|---|
 | 202 | Ingestion accepted |
-| 400 | Bad JSON, missing field, file not found, bad control file, value cannot be decrypted |
-| 404 | Unknown execution ID or employee |
+| 400 | Bad JSON, missing field, file not found, bad control file, file name / sha256 mismatch, value cannot be decrypted |
+| 404 | Unknown execution ID, employee or URL |
+| 405 | Wrong HTTP method (e.g. `GET /api/v1/decrypt`) |
+| 415 | Body is not `application/json` |
 | 502 | Airflow unreachable or refused the run ("bad gateway": the problem is in a system behind us) |
-| 500 | Anything unexpected (details only in the log, never in the response) |
+| 500 | Stored data cannot be read (`SERVER_DATA_ERROR`), or anything unexpected (details only in the log) |
+
+Every error body also has a `code` (e.g. `INVALID_REQUEST`, `METHOD_NOT_ALLOWED`). Clients check the code, not
+the message text, so messages can be improved without breaking anyone.
 
 ---
 
@@ -207,13 +216,15 @@ IngestionPipelineOptions options = PipelineOptionsFactory.fromArgs(args)
         .withValidation()                                     // fails if a @Validation.Required arg is missing
         .as(IngestionPipelineOptions.class);
 
+String key = Secrets.resolve(options.getEncryptionKey(), "LUMI_ENCRYPTION_KEY"); // secrets from env, not the command line
 IngestionControl control = new ControlFileReader().read(...); // read record_count BEFORE touching data
+SourceFileCheck.verify(control, file, expectedSha, expectedCount); // file unchanged since the API checked it
 DatabaseConfig database = new DatabaseConfig(url, user, pwd);
 RecordCountCheck.RunContext run = new RunContext(executionId, input, expected, Instant.now());
 
 statusRepository.save(IngestionExecution.started(...));      // STARTED row
 Pipeline pipeline = Pipeline.create(options);
-IngestionGraph.build(pipeline, options, database, run);       // describe the steps (nothing runs yet)
+IngestionGraph.build(pipeline, options, database, run, key);  // describe the steps (nothing runs yet)
 statusRepository.save(IngestionExecution.running(...));      // RUNNING row
 runAndWait(...)                                               // run, wait, print summary, handle crash
 ```
@@ -228,13 +239,15 @@ This is called **deferred execution**, and interviewers like to ask about it.
 ```java
 PCollectionTuple read = pipeline.apply("ReadEmployees", new ReadEmployeeFiles(input, fileType, id));
 PCollectionTuple validated = read.get(PARSED).apply("ValidateEmployees", new ValidateEmployees(id));
-PCollection<EncryptedEmployee> rows = validated.get(VALID)
-        .apply("PrepareForWarehouse", new PrepareForWarehouse(id, key));
+PCollectionTuple unique = validated.get(VALID).apply(new RejectDuplicateIds(id)); // same employee_id twice
+PCollection<EncryptedEmployee> rows = unique.get(UNIQUE)
+        .apply("PrepareForWarehouse", new PrepareForWarehouse(id, key, sourceModifiedAt));
 PCollectionTuple loaded = rows.apply("LoadEmployees", new LoadEmployees(database));
 
-PCollectionList.of(read.get(PARSE_FAILURES))                  // 3 kinds of failures ...
+PCollectionList.of(read.get(PARSE_FAILURES))                  // every kind of failure ...
         .and(validated.get(INVALID))
-        .and(loaded.get(FAILED))
+        .and(unique.get(DUPLICATES))
+        .and(loaded.get(FAILED))                              // LOAD_ERROR and STALE_ERROR
         .apply(Flatten.pCollections())                        // ... merged into one collection
         .apply(new WriteErrorReport(errorOutput, database));  // → .txt file + ingestion_error table
 
@@ -266,21 +279,29 @@ and **JSON Lines** (one object per line), which is what PySpark writes when it s
 
 | Field | Rule |
 |---|---|
-| employee_id, manager_id | required, exactly 7 characters |
+| employee_id, manager_id | required, exactly 7 letters or digits |
 | first_name | required, 3–15 |
 | last_name | optional, max 15 |
-| email | required, 13–30, valid format |
-| phone_number | required, exactly 10 characters |
-| hire_date | required, 10 characters, real date `yyyy-MM-dd` |
+| email | required, 13–30, valid format (unique is enforced by the database) |
+| phone_number | required, exactly 10 digits |
+| hire_date | required, real date `yyyy-MM-dd`, not in the future (uses a `Clock`, so tests can fix "today") |
 | department / job_title | optional, max 20 / 30 |
-| currency | required, 3 uppercase letters |
-| employment_status | required, 3–13 |
+| currency | required, a real ISO 4217 code (`java.util.Currency`) |
+| employment_status | required, one of Contract, Full-time, Intern, Part-time, Temporary |
 | is_active | required boolean |
 | skills | all skills joined ≤ 100 characters |
 | salary | not negative |
 
 Design: rules are a **table** (`List<LengthRule>`) instead of one method per field. Adding a rule is one line.
 The validator returns **all** errors of a record at once, so the data provider can fix everything in one go.
+`ColumnLengthContractTest` compares these max lengths with the real table columns, so the two cannot drift.
+
+**Duplicates (`RejectDuplicateIds`):** groups records by `employee_id` (`GroupByKey`). The one with the lowest
+record number loads; the rest become `DUPLICATE_ERROR`. Without this, two rows with one ID would be upserted in
+random order and the result would depend on timing.
+
+**Strict JSON types:** the Jackson mapper refuses `950000.5` or `"950000"` for salary and `1` or `"true"` for
+`is_active`. Silent conversion would load a wrong value; a parse error tells the provider to fix it.
 
 ### 6.6 Transform: `PrepareForWarehouse`
 
@@ -297,6 +318,8 @@ The validator returns **all** errors of a record at once, so the data provider c
 - **One commit per row.** Slower than a batch, but one bad row can be rolled back alone.
 - **UPSERT** (`INSERT ... ON CONFLICT (employee_id) DO UPDATE`): re-running a file updates rows instead of
   failing on duplicates. This makes the job **idempotent**.
+- **Stale protection:** the upsert has `WHERE EXCLUDED.source_modified_at >= employee.source_modified_at` (or either is NULL).
+  An older file cannot overwrite a newer one. If 0 rows changed, the record is reported as `STALE_ERROR`.
 - **Error classification:** SQLSTATE `22xxx` (bad data, e.g. value too long) and `23xxx` (constraint) → this row
   is bad → send to the failure branch. Anything else (DB down, wrong password) → throw → fail the job, because
   marking 10,000 rows as "bad" when the DB is simply down would be wrong.
@@ -304,7 +327,9 @@ The validator returns **all** errors of a record at once, so the data provider c
 ### 6.8 Error report: `WriteErrorReport`
 
 - Text file: `data/error/execution-<id>.txt`, one line per failure:
-  `record_number=3|error_type=VALIDATION_ERROR|error_message=...|employee_id=...|source_file=...`
+  `record_number=3|error_type=VALIDATION_ERROR|error_message=...|employee_id=...|source_file=...|split_file=...`
+- `source_file` + `record_number` always point to the user's original file; `split_file` names the PySpark part
+  file (empty when the file was not split). See section 8.
 - Table: `ingestion_error`, with `raw_record` stored as JSONB **with phone and salary replaced by `[REDACTED]`**
   (`RedactedEmployeeJson`). Error tables are read by support staff and are not encrypted.
 
@@ -373,6 +398,12 @@ Every log line starts with `[step] execution_id=...`, so you can follow one run 
 **Why the trailing space in `bash_command="bash .../run_beam_pipeline.sh "`?** If a BashOperator command ends
 in `.sh`, Airflow tries to load it as a Jinja template file and fails. The space avoids that (a well-known gotcha).
 
+**Safety nets:**
+- `execution_timeout`: PySpark 30 minutes, Beam 1 hour. A stuck job is killed instead of holding a slot forever.
+- `on_failure_callback=on_dag_failure`: if Beam was killed and could not save its status, this sets the run to
+  `FAILED` (but never overwrites a status Beam already saved).
+- `check_execution_status` uses `ALL_DONE`, so it also runs after Beam failed and logs the saved reason.
+
 **Why `env=` + `append_env=True`?** Values reach the script as environment variables (safer than building a
 long command string), and `append_env` keeps the container's own variables such as `LUMI_ENCRYPTION_KEY`.
 
@@ -381,6 +412,13 @@ long command string), and `append_env` keeps the container's own variables such 
 ## 8. PySpark split job
 
 - Reads CSV (all columns as text) or JSON (`multiLine` only for arrays; JSON Lines read line by line).
+- CSV is read and written with `escape='"'` and `multiLine=true`: standard CSV doubles a quote inside a value
+  (`""`) and may have line breaks inside quotes. Spark's defaults (`\` escape, one record per line) garbled such
+  values and split one record into two, which would also break the record count check.
+- **Record numbers:** `zipWithIndex()` adds `source_record_number` (1, 2, 3 ... in file order) **before**
+  `repartition()` shuffles rows into part files. Beam uses it, so an error still says "record 87 of
+  employees_large.csv". `zipWithIndex` is used because `monotonically_increasing_id()` has gaps and
+  `row_number()` without a partition moves all rows to one executor.
 - `file_count = ceil(records / records_per_file)` → `repartition(file_count)` → write.
 - Spark writes `part-*.csv` / `part-*.json` files in `data/split/<executionId>/`; Beam reads them with a glob.
 - Output from an earlier attempt of the same run is deleted first, so retries are safe.
@@ -391,8 +429,8 @@ long command string), and `append_env` keeps the container's own variables such 
 
 | Table | One row per | Key columns |
 |---|---|---|
-| `employee` | employee | `employee_id` (PK), encrypted phone/salary, JSONB skills/address/emergency_contact, 3 metadata columns |
-| `ingestion_error` | rejected record | execution_id, record_number, error_type, error_message, redacted raw_record |
+| `employee` | employee | `employee_id` (PK), unique `email`, encrypted phone/salary, JSONB skills/address/emergency_contact, 3 metadata columns, `source_modified_at` |
+| `ingestion_error` | rejected record | execution_id, source_file, split_file, record_number, error_type, error_message, redacted raw_record |
 | `ingestion_execution` | run | status, expected vs actual count, failure_reason, timings |
 
 JSONB is used for nested data (address, emergency contact, skills) because it keeps the structure and can still
@@ -416,7 +454,7 @@ be queried: `SELECT address->>'city' FROM employee`.
 | Split location passed as DAG parameter | `split_output_dir` in `dag_run.conf` |
 | Control file with record_count | `ControlFileValidator` (API), `ControlFileReader` (Beam) |
 | Fail on count mismatch with clear message | `RecordCountCheck` → "control file expected 20 record(s) but 16 were loaded" |
-| Unit tests | 153 tests: 78 Beam, 52 Spring Boot, 15 Airflow, 8 PySpark (11 of them against the real database) |
+| Unit tests | 219 tests: 114 Beam, 64 Spring Boot, 25 Airflow, 16 PySpark |
 | Decrypt stored fields | `GET /api/v1/employees/{id}`, `POST /api/v1/decrypt` |
 
 ---
@@ -445,6 +483,17 @@ be queried: `SELECT address->>'city' FROM employee`.
 | No Maven wrapper for Beam | Added `mvnw` | No global Maven needed |
 | Windows CRLF could break `.sh` in containers | `.gitattributes` forces LF | Cross-platform |
 | 3,000-line generated `airflow.cfg` committed | Ignored; env vars in compose | Generated files don't belong in git |
+| Same `employee_id` twice in a file: random winner | `RejectDuplicateIds`, first record wins | Deterministic result |
+| Re-running an old file overwrote newer data | `source_modified_at` + upsert `WHERE` | Stale data protection |
+| Data file could change between API check and Beam run | sha256 in DAG conf, checked again by Beam | Time-of-check vs time-of-use bug |
+| Key and DB password on the `java` command line | Read from environment (`Secrets`) | Command lines are visible in `ps` and logs |
+| Passwords hard-coded in `docker-compose.yml`, ports open on all interfaces | `.env` variables, ports on `127.0.0.1` | Security |
+| Every error was a plain message | `ErrorCode` + `code` field, 405 / 415 handled | Clients can rely on stable codes |
+| Constants copied in 4 modules could drift | `contracts/lumi-contract.json` + a `ContractTest` per module | Cross-module consistency |
+| Mutable `EmployeeRecord` with setters | Immutable class + `Builder` | Beam forbids mutating inputs |
+| No style or coverage checks | Checkstyle, JaCoCo, Ruff | Code quality |
+| Beam/PySpark could hang forever | `execution_timeout` on both tasks | Free up Airflow slots |
+| `JAVA_HOME` hard-coded to amd64 | Symlink per architecture | Works on Apple Silicon |
 
 ---
 
@@ -542,7 +591,13 @@ so the build works on any machine.
 The PostgreSQL JDBC driver sends the machine's time zone when it logs in. Some machines report old names
 like `Asia/Calcutta`, which the database rejects. Production code already runs in UTC; the tests now do too.
 
-**Q26. What would you improve next?**
+**Q26. After a split, how do you know which record of the original file failed?**
+PySpark numbers every record with its position in the original file before the shuffle
+(`source_record_number`). Beam reports that number, the original file (`--originalFile`) as `source_file`, and
+the part file as `split_file`. Without this, "record 12" would only mean "row 12 of some part file", and Spark's
+shuffle means that is a different row of the original file.
+
+**Q27. What would you improve next?**
 Batch writes with row-level fallback; authentication; retries/alerts in Airflow; data-quality metrics
 dashboard; schema registry for input formats; integration tests with Testcontainers.
 

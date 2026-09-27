@@ -2,9 +2,13 @@ package com.amex.lumi.beam.pipeline;
 
 import com.amex.lumi.beam.common.IngestionMetrics;
 import com.amex.lumi.beam.common.PipelineConstants;
+import com.amex.lumi.beam.common.Secrets;
+import com.amex.lumi.beam.encryption.AesGcmEncryptionService;
+import com.amex.lumi.beam.execution.ControlFileException;
 import com.amex.lumi.beam.execution.ControlFileReader;
 import com.amex.lumi.beam.execution.ExecutionStatusRepository;
 import com.amex.lumi.beam.execution.RecordCountCheck;
+import com.amex.lumi.beam.execution.SourceFileCheck;
 import com.amex.lumi.beam.model.IngestionControl;
 import com.amex.lumi.beam.model.IngestionExecution;
 import com.amex.lumi.beam.options.IngestionPipelineOptions;
@@ -15,6 +19,7 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.TimeZone;
@@ -40,38 +45,53 @@ public final class EmployeeIngestionPipeline {
         LOGGER.info("Starting ingestion executionId={} fileType={} input={}",
                 executionId, options.getFileType(), options.getInputFile());
 
-        DatabaseConfig database = new DatabaseConfig(
-                options.getJdbcUrl(), options.getJdbcUsername(), options.getJdbcPassword());
+        String encryptionKey = Secrets.resolve(options.getEncryptionKey(), Secrets.ENCRYPTION_KEY);
+        // Checked once here, so a bad key stops the job before any data is read.
+        AesGcmEncryptionService.fromKey(encryptionKey);
+        if (AesGcmEncryptionService.isTypedKey(encryptionKey)) {
+            LOGGER.warn("LUMI_ENCRYPTION_KEY is 32 typed characters; "
+                    + "a random key is stronger (openssl rand -base64 32)");
+        }
+        DatabaseConfig database = new DatabaseConfig(options.getJdbcUrl(), options.getJdbcUsername(),
+                Secrets.resolve(options.getJdbcPassword(), Secrets.WAREHOUSE_PASSWORD));
         ExecutionStatusRepository statusRepository = new ExecutionStatusRepository(database);
 
         IngestionControl control = readControlFile(options, startedAt, statusRepository);
         RecordCountCheck.RunContext run = new RecordCountCheck.RunContext(
-                executionId, options.getInputFile(), control.expectedRecordCount(), startedAt);
+                executionId, sourceFileOf(options), control.expectedRecordCount(), startedAt);
 
         statusRepository.save(IngestionExecution.started(
                 executionId, run.sourceFile(), run.expectedRecordCount(), startedAt));
 
         Pipeline pipeline = Pipeline.create(options);
-        IngestionGraph.build(pipeline, options, database, run);
+        IngestionGraph.build(pipeline, options, database, run, encryptionKey);
 
         statusRepository.save(IngestionExecution.running(
                 executionId, run.sourceFile(), run.expectedRecordCount(), startedAt));
         runAndWait(pipeline, executionId, statusRepository);
     }
 
-    // A bad control file stops the run before any data is read, but the FAILED status is still saved.
+    // A bad control file stops the run early, but FAILED is still saved.
     private static IngestionControl readControlFile(IngestionPipelineOptions options, Instant startedAt,
                                                     ExecutionStatusRepository statusRepository) throws SQLException {
         try {
             IngestionControl control = new ControlFileReader().read(options.getControlFile());
+            SourceFileCheck.verify(control, Path.of(sourceFileOf(options)), options.getExpectedSha256(),
+                    options.getExpectedRecordCount());
             LOGGER.info("Control file expects {} record(s)", control.expectedRecordCount());
             return control;
-        } catch (IllegalArgumentException exception) {
+        } catch (ControlFileException exception) {
             LOGGER.error("Control file problem, run stopped: {}", exception.getMessage());
-            statusRepository.save(IngestionExecution.failed(options.getExecutionId(), options.getInputFile(),
+            statusRepository.save(IngestionExecution.failed(options.getExecutionId(), sourceFileOf(options),
                     null, null, startedAt, Instant.now(), exception.getMessage()));
             throw exception;
         }
+    }
+
+    /** The user's file, not the split-file pattern, so the status row names the file that was sent. */
+    static String sourceFileOf(IngestionPipelineOptions options) {
+        String original = options.getOriginalFile();
+        return original == null || original.isBlank() ? options.getInputFile() : original;
     }
 
     private static void runAndWait(Pipeline pipeline, String executionId,

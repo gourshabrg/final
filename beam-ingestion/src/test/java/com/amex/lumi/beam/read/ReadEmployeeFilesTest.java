@@ -43,4 +43,50 @@ class ReadEmployeeFilesTest {
 
         pipeline.run().waitUntilFinish();
     }
+
+    @Test
+    void splitFilesAreReportedAgainstTheOriginalFile() throws Exception {
+        Path splitFolder = Files.createDirectories(tempDir.resolve("split"));
+        String header = TestEmployees.CSV_HEADER + ",source_record_number\n";
+        Path part0 = Files.writeString(splitFolder.resolve("part-00000.csv"),
+                header + TestEmployees.CSV_ROW.replace("EMP0001", "EMP0087") + ",87\n");
+        Path part1 = Files.writeString(splitFolder.resolve("part-00001.csv"),
+                header + TestEmployees.CSV_ROW.replace(",true,", ",maybe,") + ",12\n");
+        String original = tempDir.resolve("employees_large.csv").toString();
+
+        Pipeline pipeline = Pipeline.create();
+        PCollectionTuple result = pipeline.apply(new ReadEmployeeFiles(splitFolder + "/*.csv", original,
+                FileType.CSV, "11111111-1111-1111-1111-111111111111"));
+
+        PAssert.that(result.get(ReadEmployeeFiles.PARSED)
+                        .apply("ParsedLocations", MapElements.into(TypeDescriptors.strings())
+                                .via(parsed -> parsed.recordNumber() + "|" + parsed.sourceFile() + "|"
+                                        + parsed.splitFile())))
+                .containsInAnyOrder("87|" + original + "|" + part0);
+        PAssert.that(result.get(ReadEmployeeFiles.PARSE_FAILURES)
+                        .apply("FailureLocations", MapElements.into(TypeDescriptors.strings())
+                                .via(failure -> failure.recordNumber() + "|" + failure.sourceFile() + "|"
+                                        + failure.splitFile())))
+                .containsInAnyOrder("12|" + original + "|" + part1);
+
+        pipeline.run().waitUntilFinish();
+    }
+
+    @Test
+    void fileThatWasNotSplitHasNoSplitFile() throws Exception {
+        Path csv = Files.writeString(tempDir.resolve("employees.csv"),
+                TestEmployees.CSV_HEADER + "\n" + TestEmployees.CSV_ROW + "\n");
+
+        Pipeline pipeline = Pipeline.create();
+        PCollectionTuple result = pipeline.apply(new ReadEmployeeFiles(csv.toString(), csv.toString(),
+                FileType.CSV, "11111111-1111-1111-1111-111111111111"));
+
+        PAssert.that(result.get(ReadEmployeeFiles.PARSED)
+                        .apply("Locations", MapElements.into(TypeDescriptors.strings())
+                                .via(parsed -> parsed.recordNumber() + "|" + parsed.sourceFile() + "|"
+                                        + parsed.splitFile())))
+                .containsInAnyOrder("1|" + csv + "|null");
+
+        pipeline.run().waitUntilFinish();
+    }
 }

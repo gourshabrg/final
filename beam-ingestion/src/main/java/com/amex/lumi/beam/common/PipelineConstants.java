@@ -17,6 +17,12 @@ public final class PipelineConstants {
     /** Separator between skills in a CSV cell, e.g. "Java;SQL". */
     public static final String SKILL_SEPARATOR = ";";
 
+    /** Column the PySpark split adds: the record's position in the original file. */
+    public static final String SOURCE_RECORD_NUMBER = "source_record_number";
+
+    /** Column the PySpark split fills with the raw text of a record it could not read. */
+    public static final String CORRUPT_RECORD = "_corrupt_record";
+
     private PipelineConstants() {
     }
 }

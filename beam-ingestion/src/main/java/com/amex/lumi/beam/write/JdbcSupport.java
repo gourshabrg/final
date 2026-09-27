@@ -19,8 +19,7 @@ final class JdbcSupport {
     }
 
     /**
-     * PostgreSQL error codes starting with 22 or 23 mean the row itself is bad
-     * (value too long, duplicate key). Any other code means the database has a problem.
+     * SQLSTATE 22xxx/23xxx means a bad row; anything else is a database problem.
      */
     static boolean isRecordLevelError(SQLException exception) {
         String state = exception.getSQLState();

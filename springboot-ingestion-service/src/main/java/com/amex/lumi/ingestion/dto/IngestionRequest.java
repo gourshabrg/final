@@ -6,8 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * Body of POST /api/v1/ingestions. Paths can be absolute or relative to the configured roots,
- * e.g. "samples/employees.csv" and "employees.properties".
+ * Body of POST /api/v1/ingestions; paths are absolute or relative to the roots.
  */
 public record IngestionRequest(
         @NotBlank(message = "fileLocation is required")

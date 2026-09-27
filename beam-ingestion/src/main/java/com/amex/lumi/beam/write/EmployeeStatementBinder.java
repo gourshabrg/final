@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -19,14 +20,14 @@ import java.util.UUID;
  */
 final class EmployeeStatementBinder {
 
-    // Upsert = insert, or update if the employee_id already exists. Re-running a file is then safe.
+    // Upsert, skipped when the stored row came from a newer file.
     static final String UPSERT_SQL = """
             INSERT INTO employee (
                 employee_id, first_name, last_name, email, phone_number_encrypted,
                 hire_date, department, job_title, salary_encrypted, currency,
                 employment_status, manager_id, is_active, skills, address, emergency_contact,
-                ingestion_timestamp, execution_id, source_creation_time)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ingestion_timestamp, execution_id, source_creation_time, source_modified_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (employee_id) DO UPDATE SET
                 first_name = EXCLUDED.first_name,
                 last_name = EXCLUDED.last_name,
@@ -45,7 +46,11 @@ final class EmployeeStatementBinder {
                 emergency_contact = EXCLUDED.emergency_contact,
                 ingestion_timestamp = EXCLUDED.ingestion_timestamp,
                 execution_id = EXCLUDED.execution_id,
-                source_creation_time = EXCLUDED.source_creation_time
+                source_creation_time = EXCLUDED.source_creation_time,
+                source_modified_at = EXCLUDED.source_modified_at
+            WHERE employee.source_modified_at IS NULL
+               OR EXCLUDED.source_modified_at IS NULL
+               OR EXCLUDED.source_modified_at >= employee.source_modified_at
             """;
 
     private final ObjectMapper mapper;
@@ -76,6 +81,8 @@ final class EmployeeStatementBinder {
         statement.setTimestamp(17, Timestamp.from(row.enriched().ingestionTimestamp()));
         statement.setObject(18, UUID.fromString(row.executionId()));
         statement.setTimestamp(19, Timestamp.from(row.enriched().sourceCreationTime()));
+        Instant modifiedAt = row.enriched().sourceModifiedAt();
+        statement.setTimestamp(20, modifiedAt == null ? null : Timestamp.from(modifiedAt));
     }
 
     // Same fields, but phone holds the encrypted value.

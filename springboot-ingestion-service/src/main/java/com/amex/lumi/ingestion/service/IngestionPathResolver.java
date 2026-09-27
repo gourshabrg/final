@@ -8,8 +8,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
 /**
- * Turns request paths into local paths and into the matching paths inside the Airflow containers.
- * Example: data/samples/employees.csv -> /opt/lumi/data/samples/employees.csv
+ * Maps request paths to local paths and to paths inside the Airflow containers.
  */
 @Component
 public class IngestionPathResolver {
@@ -65,7 +64,8 @@ public class IngestionPathResolver {
         }
         Path resolved = (path.isAbsolute() ? path : root.resolve(path)).toAbsolutePath().normalize();
         if (!resolved.startsWith(root)) {
-            throw new InvalidRequestException(fieldName + " must be inside " + root);
+            // The real server folder is not shown to the client.
+            throw new InvalidRequestException(fieldName + " must be inside the configured folder: " + location);
         }
         return resolved;
     }

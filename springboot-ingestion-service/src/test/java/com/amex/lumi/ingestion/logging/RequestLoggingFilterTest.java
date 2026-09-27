@@ -32,6 +32,17 @@ class RequestLoggingFilterTest {
     }
 
     @Test
+    void replacesAnUnsafeRequestId() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v1/ingestions/1");
+        request.addHeader("X-Request-Id", "abc] [executionId] fake log text");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        filter.doFilter(request, response, new MockFilterChain());
+
+        assertThat(response.getHeader("X-Request-Id")).hasSize(8).doesNotContain(" ");
+    }
+
+    @Test
     void skipsHealthChecks() throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
 

@@ -8,7 +8,6 @@ import java.io.StringReader;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonEmployeeParserTest {
 
@@ -56,8 +55,40 @@ class JsonEmployeeParserTest {
     }
 
     @Test
-    void brokenJsonFailsTheFile() {
-        assertThrows(IOException.class, () -> parse("[" + EMPLOYEE_JSON + ", {oops"));
+    void brokenJsonArrayKeepsEarlierRecordsAndReportsTheRestOfTheFile() throws IOException {
+        RecordCollector result = parse("[" + EMPLOYEE_JSON + ", {oops");
+
+        assertEquals(1, result.records.size());
+        assertEquals(List.of("file is not valid JSON after record 1"), result.fileErrors);
+    }
+
+    @Test
+    void brokenJsonLineRejectsOnlyThatLine() throws IOException {
+        RecordCollector result = parse(EMPLOYEE_JSON + "\n{\"employee_id\": broken\n" + EMPLOYEE_JSON + "\n");
+
+        assertEquals(2, result.records.size());
+        assertEquals(List.of(JsonEmployeeParser.INVALID_JSON), result.errors);
+    }
+
+    @Test
+    void recordMarkedCorruptBySparkIsAParseError() throws IOException {
+        RecordCollector result = parse("{\"_corrupt_record\":\"{broken\",\"source_record_number\":4}\n");
+
+        assertEquals(List.of(JsonEmployeeParser.INVALID_JSON), result.errors);
+        assertEquals(List.of(4L), result.errorNumbers);
+    }
+
+    @Test
+    void valuesAreNotSilentlyChanged() throws IOException {
+        RecordCollector result = parse(String.join("\n",
+                EMPLOYEE_JSON.replace("\"salary\":950000", "\"salary\":950000.99"),
+                EMPLOYEE_JSON.replace("\"salary\":950000", "\"salary\":\"950000\""),
+                EMPLOYEE_JSON.replace("\"is_active\":true", "\"is_active\":1"),
+                EMPLOYEE_JSON.replace("\"is_active\":true", "\"is_active\":\"true\"")));
+
+        assertEquals(List.of(), result.records);
+        assertEquals(List.of("invalid value for field 'salary'", "invalid value for field 'salary'",
+                "invalid value for field 'is_active'", "invalid value for field 'is_active'"), result.errors);
     }
 
     @Test
@@ -70,13 +101,32 @@ class JsonEmployeeParserTest {
 
     @Test
     void unknownFieldsAreIgnored() throws IOException {
-        RecordCollector result = parse("[" + EMPLOYEE_JSON.replace("{\"employee_id\"", "{\"extra\":1,\"employee_id\"") + "]");
+        RecordCollector result = parse("["
+                + EMPLOYEE_JSON.replace("{\"employee_id\"", "{\"extra\":1,\"employee_id\"") + "]");
 
         assertEquals(List.of(TestEmployees.valid()), result.records);
     }
 
     @Test
-    void plainValueInsteadOfObjectFailsTheFile() {
-        assertThrows(IOException.class, () -> parse("\"just text\""));
+    void plainValueInsteadOfObjectIsRejected() throws IOException {
+        RecordCollector result = parse("\"just text\"");
+
+        assertEquals(List.of(JsonEmployeeParser.NOT_AN_OBJECT), result.errors);
+    }
+
+    @Test
+    void splitFileRecordKeepsItsNumberFromTheOriginalFile() throws IOException {
+        RecordCollector result = parse(
+                EMPLOYEE_JSON.replace("{\"employee_id\"", "{\"source_record_number\":57,\"employee_id\""));
+
+        assertEquals(List.of(57L), result.recordNumbers);
+        assertEquals("EMP0001", result.records.get(0).getEmployeeId());
+    }
+
+    @Test
+    void badRecordInSplitFileKeepsItsNumber() throws IOException {
+        RecordCollector result = parse("{\"source_record_number\":9,\"employee_id\":\"EMP0009\",\"salary\":\"lots\"}");
+
+        assertEquals(List.of(9L), result.errorNumbers);
     }
 }

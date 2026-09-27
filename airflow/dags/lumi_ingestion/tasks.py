@@ -1,6 +1,7 @@
 """Python functions run by the lumi_ingestion_orchestrator DAG tasks."""
 import logging
 import os
+import uuid
 
 from airflow.exceptions import AirflowException
 from airflow.providers.postgres.hooks.postgres import PostgresHook
@@ -26,7 +27,7 @@ def _conf(context):
 
 
 def _log(level, step, conf, message, *args):
-    # Same "[step] execution_id=..." start on every line, so one run can be found with a single search.
+    # Every line starts with "[step] execution_id=...", so one search finds a whole run.
     logger.log(level, "[%s] execution_id=%s | " + message, step, conf.get("execution_id"), *args)
 
 
@@ -50,6 +51,10 @@ def validate_request(**context):
 
     if conf["file_type"] not in SUPPORTED_FILE_TYPES:
         _fail("validate", conf, f"Unsupported file_type {conf['file_type']}; expected CSV or JSON")
+
+    # The text "false" would count as true in Python and start a Spark split for nothing.
+    if not isinstance(conf["requires_split"], bool):
+        _fail("validate", conf, f"requires_split must be true or false, not {conf['requires_split']!r}")
 
     # The API checked the files on the host; here we check the container can see them too.
     for key in ("input_file", "control_file"):
@@ -103,6 +108,31 @@ def check_execution_status(**context):
 
     # The return value is saved in XCom so the next task can read it.
     return {"expected": expected, "loaded": loaded, "error_records": error_count}
+
+
+# Creates the row if Beam never started; never overwrites a finished run.
+MARK_FAILED_SQL = """
+    INSERT INTO ingestion_execution (execution_id, source_file, status, started_at, completed_at, failure_reason)
+    VALUES (%s, %s, 'FAILED', now(), now(), %s)
+    ON CONFLICT (execution_id) DO UPDATE
+       SET status = 'FAILED', completed_at = now(), failure_reason = EXCLUDED.failure_reason
+     WHERE ingestion_execution.status IN ('STARTED', 'RUNNING')
+"""
+
+
+def on_dag_failure(context):
+    """DAG failure callback: a killed or crashed Beam job cannot mark its own run FAILED, so Airflow does it."""
+    conf = _conf(context)
+    failed_tasks = [task.task_id for task in context["dag_run"].get_task_instances(state="failed")]
+    reason = "Airflow task(s) failed: " + (", ".join(failed_tasks) or "unknown")
+    _log(logging.ERROR, "alert", conf, "ingestion FAILED | %s", reason)
+    try:
+        execution_id = str(uuid.UUID(str(conf.get("execution_id"))))
+    except ValueError:
+        _log(logging.ERROR, "alert", conf, "no valid execution_id, status not saved")
+        return
+    PostgresHook(postgres_conn_id=WAREHOUSE_CONN_ID).run(
+        MARK_FAILED_SQL, parameters=(execution_id, conf.get("input_file") or "unknown", reason))
 
 
 def finalize(**context):

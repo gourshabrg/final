@@ -5,3 +5,6 @@
 *.sql    text eol=lf
 mvnw     text eol=lf
 *.cmd    text eol=crlf
+
+# Sample data is checked with a sha256 in its control file, so Git must never change its bytes.
+data/samples/** -text

@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS employee (
 
     last_name VARCHAR(15),
 
-    email VARCHAR(30) NOT NULL,
+    -- One email per employee; a second employee with the same email is rejected as a load error.
+    email VARCHAR(30) NOT NULL CONSTRAINT uq_employee_email UNIQUE,
 
     phone_number_encrypted TEXT,
 
@@ -37,7 +38,10 @@ CREATE TABLE IF NOT EXISTS employee (
 
     execution_id UUID NOT NULL,
 
-    source_creation_time TIMESTAMP WITH TIME ZONE NOT NULL
+    source_creation_time TIMESTAMP WITH TIME ZONE NOT NULL,
+
+    -- Last-modified time of the source file; an older file never overwrites a row from a newer one.
+    source_modified_at TIMESTAMP WITH TIME ZONE
 );
 
 
@@ -47,6 +51,9 @@ CREATE TABLE IF NOT EXISTS ingestion_error (
     execution_id UUID NOT NULL,
 
     source_file VARCHAR(1000) NOT NULL,
+
+    -- PySpark part file the record was read from; NULL when the file was not split.
+    split_file VARCHAR(1000),
 
     record_number BIGINT,
 

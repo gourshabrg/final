@@ -24,21 +24,44 @@ public class FieldDecryptor {
     private static final String TRANSFORMATION = "AES/GCM/NoPadding";
     private static final String VERSION = "v1";
     private static final int KEY_SIZE_BYTES = 32;
+    private static final int BASE64_KEY_LENGTH = 44;
     private static final int IV_SIZE_BYTES = 12;
     private static final int TAG_LENGTH_BITS = 128;
 
     private final SecretKeySpec key;
 
     public FieldDecryptor(EncryptionProperties properties) {
-        byte[] bytes = properties.key().getBytes(StandardCharsets.UTF_8);
-        // Fail at startup, not on the first request.
-        if (bytes.length != KEY_SIZE_BYTES) {
-            LOGGER.error("lumi.encryption.key has {} bytes, expected {}", bytes.length, KEY_SIZE_BYTES);
-            throw new IllegalStateException("lumi.encryption.key must be exactly " + KEY_SIZE_BYTES
-                    + " bytes but is " + bytes.length);
-        }
-        this.key = new SecretKeySpec(bytes, "AES");
+        this.key = new SecretKeySpec(keyBytes(properties.key()), "AES");
         LOGGER.info("Field decryption is ready");
+    }
+
+    // Same key rules as Beam, checked at startup.
+    private static byte[] keyBytes(String key) {
+        byte[] decoded = decodeBase64Key(key);
+        if (decoded != null) {
+            return decoded;
+        }
+        byte[] bytes = key.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length != KEY_SIZE_BYTES) {
+            LOGGER.error("lumi.encryption.key has {} characters, expected 32 or a 32-byte base64 key", bytes.length);
+            throw new IllegalStateException("lumi.encryption.key must be 32 bytes in base64 or exactly "
+                    + KEY_SIZE_BYTES + " characters, but is " + bytes.length + " characters");
+        }
+        LOGGER.warn("lumi.encryption.key is 32 typed characters; a random key is stronger (openssl rand -base64 32)");
+        return bytes;
+    }
+
+    // A 32-byte base64 key is 44 characters, so it never looks like a typed key.
+    private static byte[] decodeBase64Key(String key) {
+        if (key.length() != BASE64_KEY_LENGTH) {
+            return null;
+        }
+        try {
+            byte[] decoded = Base64.getDecoder().decode(key);
+            return decoded.length == KEY_SIZE_BYTES ? decoded : null;
+        } catch (IllegalArgumentException notBase64) {
+            return null;
+        }
     }
 
     public String decrypt(String encryptedValue) {

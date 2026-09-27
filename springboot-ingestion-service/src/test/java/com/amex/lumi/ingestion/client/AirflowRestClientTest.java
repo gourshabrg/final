@@ -62,6 +62,14 @@ class AirflowRestClientTest {
     }
 
     @Test
+    void airflowErrorTextIsNotPassedToTheClient() throws IOException {
+        AirflowRestClient client = clientReturning(500);
+
+        assertThatThrownBy(() -> client.triggerDag(new AirflowDagRunRequest("ingestion_1", Map.of())))
+                .hasMessage(AirflowRestClient.CLIENT_MESSAGE);
+    }
+
+    @Test
     void airflowNotRunningBecomesAirflowTriggerException() {
         AirflowRestClient client = new AirflowRestClient(
                 new AirflowProperties("http://localhost:1", "airflow", "airflow", "my_dag", 1, 1));

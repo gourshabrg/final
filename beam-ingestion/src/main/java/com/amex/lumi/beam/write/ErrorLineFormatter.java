@@ -16,6 +16,7 @@ public final class ErrorLineFormatter {
                 + "|error_message=" + clean(failure.message())
                 + "|employee_id=" + clean(failure.employeeId())
                 + "|source_file=" + clean(failure.sourceFile())
+                + "|split_file=" + clean(failure.splitFile())
                 + "|execution_id=" + clean(failure.executionId());
     }
 

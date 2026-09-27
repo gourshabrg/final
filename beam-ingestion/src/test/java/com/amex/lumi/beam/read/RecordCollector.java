@@ -10,14 +10,24 @@ class RecordCollector implements RecordHandler {
 
     final List<EmployeeRecord> records = new ArrayList<>();
     final List<String> errors = new ArrayList<>();
+    final List<Long> recordNumbers = new ArrayList<>();
+    final List<Long> errorNumbers = new ArrayList<>();
+    final List<String> fileErrors = new ArrayList<>();
 
     @Override
-    public void onRecord(EmployeeRecord employee) {
+    public void onRecord(EmployeeRecord employee, Long sourceRecordNumber) {
         records.add(employee);
+        recordNumbers.add(sourceRecordNumber);
     }
 
     @Override
-    public void onError(String reason) {
+    public void onError(String reason, Long sourceRecordNumber) {
         errors.add(reason);
+        errorNumbers.add(sourceRecordNumber);
+    }
+
+    @Override
+    public void onFileError(String reason) {
+        fileErrors.add(reason);
     }
 }

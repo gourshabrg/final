@@ -4,6 +4,9 @@ import com.amex.lumi.ingestion.config.EncryptionProperties;
 import com.amex.lumi.ingestion.exception.DecryptionException;
 import org.junit.jupiter.api.Test;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,6 +42,16 @@ class FieldDecryptorTest {
     void emptyValuesAreReturnedAsTheyAre() {
         assertThat(decryptor.decryptIfPresent(null)).isNull();
         assertThat(decryptor.decryptIfPresent(" ")).isEqualTo(" ");
+    }
+
+    @Test
+    void randomBase64KeyIsSupported() {
+        byte[] randomKey = new byte[32];
+        new SecureRandom().nextBytes(randomKey);
+        FieldDecryptor withRandomKey = new FieldDecryptor(
+                new EncryptionProperties(Base64.getEncoder().encodeToString(randomKey)));
+
+        assertThat(withRandomKey.decrypt(TestCipher.encrypt("950000", randomKey))).isEqualTo("950000");
     }
 
     @Test

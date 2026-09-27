@@ -1,19 +1,14 @@
 """
 End-to-end scenarios: API -> Airflow DAG -> PySpark split -> Beam -> PostgreSQL.
 
-Needs the running platform (docker compose + API). Only uses the Python standard library.
-
-    python tests/e2e/run_scenarios.py              # checks whatever split mode the API is using
-    python tests/e2e/run_scenarios.py --expect split
-    python tests/e2e/run_scenarios.py --expect no-split
-
-The API decides split / no split from lumi.ingestion.file-size-threshold-bytes:
-threshold 1 byte = every file is split, a large threshold (e.g. 10000000) = no file is split.
+Usage: python tests/e2e/run_scenarios.py [--expect split|no-split]  (needs docker compose + API running)
 """
 import argparse
 import base64
+import csv
 import json
 import math
+import os
 import sys
 import time
 import urllib.error
@@ -24,7 +19,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 API = "http://localhost:8080"
 AIRFLOW = "http://localhost:8082"
-AIRFLOW_AUTH = "Basic " + base64.b64encode(b"airflow:airflow").decode()
+
+
+def setting(name, default):
+    """Environment variable first, then the project .env file, then the default (same as the other modules)."""
+    if os.environ.get(name):
+        return os.environ[name]
+    env_file = ROOT / ".env"
+    if env_file.exists():
+        for line in env_file.read_text(encoding="utf-8-sig").splitlines():
+            if line.strip().startswith(name + "="):
+                return line.split("=", 1)[1].strip()
+    return default
+
+
+AIRFLOW_USER = setting("AIRFLOW_ADMIN_USERNAME", "airflow")
+AIRFLOW_PASSWORD = setting("AIRFLOW_ADMIN_PASSWORD", "airflow")
+AIRFLOW_AUTH = "Basic " + base64.b64encode(f"{AIRFLOW_USER}:{AIRFLOW_PASSWORD}".encode()).decode()
 DAG_ID = "lumi_ingestion_orchestrator"
 CONTAINER_DATA = "/opt/lumi/data"
 CONTAINER_CONTROL = "/opt/lumi/control-files"
@@ -135,8 +146,25 @@ def split_file_count(execution_id, file_type):
     return len(list(folder.glob("*." + file_type.lower()))) if folder.exists() else 0
 
 
+def original_employee_ids(data_file):
+    """employee_id of every record in the original CSV, in file order."""
+    with open(ROOT / "data" / data_file, encoding="utf-8-sig", newline="") as file:
+        return [row["employee_id"] for row in csv.DictReader(file)]
+
+
+def verify_error_locations(name, data_file, requires_split, lines):
+    """Errors must point to the user's file and to the right record in it, split or not."""
+    errors = [dict(part.split("=", 1) for part in line.split("|")) for line in lines]
+    ids = original_employee_ids(data_file)
+    check(name, "errors name original file", all(e["source_file"].endswith(data_file) for e in errors))
+    check(name, "record numbers match file", all(ids[int(e["record_number"]) - 1] == e["employee_id"]
+                                                 for e in errors if e["employee_id"]))
+    check(name, "split_file " + ("set" if requires_split else "empty"),
+          all(bool(e["split_file"]) == requires_split for e in errors))
+
+
 def verify_api_scenario(scenario, execution_id, requires_split, dag_state, records_per_file):
-    name, _, _, file_type, want_status, want_loaded, want_errors, records = scenario
+    name, data_file, _, file_type, want_status, want_loaded, want_errors, records = scenario
     tasks = task_states(execution_id)
     _, status = http("GET", f"{API}/api/v1/ingestions/{execution_id}")
 
@@ -157,14 +185,16 @@ def verify_api_scenario(scenario, execution_id, requires_split, dag_state, recor
               and tasks.get("run_pyspark_split") == "skipped", str(tasks.get("skip_pyspark_split")))
         check(name, "no split files", split_file_count(execution_id, file_type) == 0)
 
-    # A FAILED run stops at the Beam task, so the later status task is marked upstream_failed.
-    want_status_task = "success" if want_status == "SUCCESS" else "upstream_failed"
+    # The status task also runs after a Beam failure (all_done): it logs the saved reason and fails.
+    want_status_task = "success" if want_status == "SUCCESS" else "failed"
     check(name, "status task", tasks.get("check_execution_status") == want_status_task,
           str(tasks.get("check_execution_status")))
 
     error_file = ROOT / "data" / "error" / f"execution-{execution_id}.txt"
     lines = error_file.read_text(encoding="utf-8").splitlines() if error_file.exists() else []
     check(name, "error file lines", len(lines) == want_errors, str(len(lines)))
+    if lines and file_type == "CSV":
+        verify_error_locations(name, data_file, requires_split, lines)
 
     if name in DECRYPT_CHECKS:
         employee_id, phone = DECRYPT_CHECKS[name]

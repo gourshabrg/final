@@ -20,11 +20,15 @@ public final class TestCipher {
     }
 
     public static String encrypt(String plainText, String key) {
+        return encrypt(plainText, key.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String encrypt(String plainText, byte[] key) {
         try {
             byte[] iv = new byte[12];
             new SecureRandom().nextBytes(iv);
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES"),
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, "AES"),
                     new GCMParameterSpec(128, iv));
             byte[] encrypted = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
             return "v1:" + Base64.getEncoder().encodeToString(iv) + ":" + Base64.getEncoder().encodeToString(encrypted);

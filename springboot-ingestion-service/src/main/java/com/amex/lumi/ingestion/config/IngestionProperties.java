@@ -6,8 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * lumi.ingestion.* settings from application.yml. Local roots are paths on this machine;
- * Airflow roots are the same folders as seen inside the Airflow containers.
+ * lumi.ingestion.* settings: local roots and the same folders inside Airflow.
  */
 @Validated
 @ConfigurationProperties(prefix = "lumi.ingestion")

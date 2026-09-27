@@ -68,7 +68,7 @@ public class ValidateEmployees extends PTransform<PCollection<ParsedEmployee>, P
             LOGGER.warn("Record {} (employee_id={}) failed validation: {}",
                     record.recordNumber(), record.employee().getEmployeeId(), message);
             out.get(INVALID).output(new RecordFailure(record.recordNumber(), record.sourceFile(),
-                    executionId, FailureType.VALIDATION_ERROR, message, record.employee()));
+                    record.splitFile(), executionId, FailureType.VALIDATION_ERROR, message, record.employee()));
         }
     }
 }

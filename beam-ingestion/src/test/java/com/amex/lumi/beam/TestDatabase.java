@@ -13,17 +13,16 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * Connection to the Docker warehouse for integration tests.
- * URL order: LUMI_WAREHOUSE_JDBC_URL env var, then the project .env file, then localhost:5432.
- * Tests using it are skipped (not failed) when the database is not running.
+ * Docker warehouse for integration tests; tests are skipped when it is down.
  */
 public final class TestDatabase {
 
     private static final String DEFAULT_URL = "jdbc:postgresql://localhost:5432/warehouse";
-    private static final String USER = "airflow";
-    private static final String PASSWORD = "airflow";
+    private static final String USER = setting("POSTGRES_USER", "airflow");
+    private static final String PASSWORD = setting("POSTGRES_PASSWORD", "airflow");
 
-    public static final DatabaseConfig CONFIG = new DatabaseConfig(findUrl(), USER, PASSWORD);
+    public static final DatabaseConfig CONFIG =
+            new DatabaseConfig(setting("LUMI_WAREHOUSE_JDBC_URL", DEFAULT_URL), USER, PASSWORD);
 
     private static Boolean available;
 
@@ -78,8 +77,9 @@ public final class TestDatabase {
         }
     }
 
-    private static String findUrl() {
-        String fromEnv = System.getenv("LUMI_WAREHOUSE_JDBC_URL");
+    // Environment variable first, then the project .env file, then the default.
+    private static String setting(String name, String defaultValue) {
+        String fromEnv = System.getenv(name);
         if (fromEnv != null && !fromEnv.isBlank()) {
             return fromEnv;
         }
@@ -88,14 +88,14 @@ public final class TestDatabase {
             try {
                 for (String line : Files.readAllLines(envFile)) {
                     String trimmed = line.strip().replace("﻿", "");
-                    if (trimmed.startsWith("LUMI_WAREHOUSE_JDBC_URL=")) {
-                        return trimmed.substring("LUMI_WAREHOUSE_JDBC_URL=".length());
+                    if (trimmed.startsWith(name + "=")) {
+                        return trimmed.substring(name.length() + 1);
                     }
                 }
             } catch (IOException ignored) {
-                // Fall back to the default URL.
+                // Fall back to the default.
             }
         }
-        return DEFAULT_URL;
+        return defaultValue;
     }
 }

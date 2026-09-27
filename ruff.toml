@@ -1,0 +1,12 @@
+# Python lint rules for airflow/, pyspark/ and tests/e2e/. Run from the project root: ruff check .
+line-length = 120
+target-version = "py312"
+
+[lint]
+# E/W: style, F: real mistakes, I: import order, B: likely bugs.
+select = ["E", "W", "F", "I", "B"]
+
+[lint.isort]
+known-first-party = ["lumi_ingestion", "split_file"]
+# The repo folder "airflow" is not the Airflow library.
+known-third-party = ["airflow", "pyspark"]

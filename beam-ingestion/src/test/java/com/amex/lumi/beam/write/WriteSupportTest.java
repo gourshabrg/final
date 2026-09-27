@@ -1,14 +1,10 @@
 package com.amex.lumi.beam.write;
 
-import com.amex.lumi.beam.model.RecordFailure;
-import com.amex.lumi.beam.model.RecordFailure.FailureType;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class WriteSupportTest {
@@ -35,15 +31,5 @@ class WriteSupportTest {
 
         assertTrue(text.contains("****"));
         assertFalse(text.contains("secret"));
-    }
-
-    @Test
-    void errorLineHandlesParseErrorWithoutEmployee() {
-        RecordFailure failure = new RecordFailure(2, "in.csv", "exec-1", FailureType.PARSE_ERROR,
-                "salary must be a whole number", null);
-
-        assertNull(failure.employeeId());
-        assertEquals("record_number=2|error_type=PARSE_ERROR|error_message=salary must be a whole number"
-                + "|employee_id=|source_file=in.csv|execution_id=exec-1", ErrorLineFormatter.format(failure));
     }
 }

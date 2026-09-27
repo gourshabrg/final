@@ -19,8 +19,10 @@ public final class IngestionMetrics {
     public static final String RECORDS_PARSED = "records_parsed";
     public static final String PARSE_ERRORS = "parse_errors";
     public static final String VALIDATION_ERRORS = "validation_errors";
+    public static final String DUPLICATE_RECORDS = "duplicate_records";
     public static final String RECORDS_LOADED = "records_loaded";
     public static final String LOAD_ERRORS = "load_errors";
+    public static final String STALE_RECORDS = "stale_records";
 
     private IngestionMetrics() {
     }
@@ -30,13 +32,16 @@ public final class IngestionMetrics {
     }
 
     public static void logSummary(PipelineResult result, String executionId, Logger logger) {
-        logger.info("Ingestion summary executionId={} parsed={} parse_errors={} validation_errors={} loaded={} load_errors={}",
+        logger.info("Ingestion summary executionId={} parsed={} parse_errors={} validation_errors={} duplicates={}"
+                        + " loaded={} load_errors={} stale={}",
                 executionId,
                 read(result, RECORDS_PARSED),
                 read(result, PARSE_ERRORS),
                 read(result, VALIDATION_ERRORS),
+                read(result, DUPLICATE_RECORDS),
                 read(result, RECORDS_LOADED),
-                read(result, LOAD_ERRORS));
+                read(result, LOAD_ERRORS),
+                read(result, STALE_RECORDS));
     }
 
     private static long read(PipelineResult result, String name) {

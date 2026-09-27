@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
- * Reads from the real warehouse. Skipped when the Docker database is not running.
- * URL order: LUMI_WAREHOUSE_JDBC_URL env var, then the project .env file, then localhost:5432.
+ * Reads the real warehouse; skipped when the Docker database is down.
  */
 class RepositoryIntegrationTest {
 
-    private static final JdbcClient JDBC = JdbcClient.create(
-            new DriverManagerDataSource(findUrl(), "airflow", "airflow"));
+    private static final JdbcClient JDBC = JdbcClient.create(new DriverManagerDataSource(
+            setting("LUMI_WAREHOUSE_JDBC_URL", "jdbc:postgresql://localhost:5432/warehouse"),
+            setting("POSTGRES_USER", "airflow"), setting("POSTGRES_PASSWORD", "airflow")));
 
     private UUID executionId;
     private String employeeId;
@@ -103,8 +103,9 @@ class RepositoryIntegrationTest {
         }
     }
 
-    private static String findUrl() {
-        String fromEnv = System.getenv("LUMI_WAREHOUSE_JDBC_URL");
+    // Environment variable first, then the project .env file, then the default.
+    private static String setting(String name, String defaultValue) {
+        String fromEnv = System.getenv(name);
         if (fromEnv != null && !fromEnv.isBlank()) {
             return fromEnv;
         }
@@ -113,14 +114,14 @@ class RepositoryIntegrationTest {
             if (Files.isRegularFile(envFile)) {
                 for (String line : Files.readAllLines(envFile)) {
                     String trimmed = line.strip().replace("﻿", "");
-                    if (trimmed.startsWith("LUMI_WAREHOUSE_JDBC_URL=")) {
-                        return trimmed.substring("LUMI_WAREHOUSE_JDBC_URL=".length());
+                    if (trimmed.startsWith(name + "=")) {
+                        return trimmed.substring(name.length() + 1);
                     }
                 }
             }
         } catch (Exception ignored) {
-            // Fall back to the default URL.
+            // Fall back to the default.
         }
-        return "jdbc:postgresql://localhost:5432/warehouse";
+        return defaultValue;
     }
 }

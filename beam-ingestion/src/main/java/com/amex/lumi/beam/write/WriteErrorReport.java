@@ -49,8 +49,8 @@ public class WriteErrorReport extends PTransform<PCollection<RecordFailure>, PDo
 
         private static final String INSERT_SQL = """
                 INSERT INTO ingestion_error
-                    (execution_id, source_file, record_number, error_type, error_message, raw_record)
-                VALUES (?, ?, ?, ?, ?, ?)
+                    (execution_id, source_file, record_number, error_type, error_message, raw_record, split_file)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         private final DatabaseConfig database;
@@ -83,6 +83,7 @@ public class WriteErrorReport extends PTransform<PCollection<RecordFailure>, PDo
                 } else {
                     JdbcSupport.setJsonb(statement, 6, RedactedEmployeeJson.from(failure.employee(), mapper), mapper);
                 }
+                statement.setString(7, failure.splitFile());
                 statement.executeUpdate();
                 connection.commit();
             } catch (SQLException exception) {

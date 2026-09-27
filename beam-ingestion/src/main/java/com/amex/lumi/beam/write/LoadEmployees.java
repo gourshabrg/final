@@ -45,9 +45,11 @@ public class LoadEmployees extends PTransform<PCollection<EncryptedEmployee>, PC
     static class WriteEmployeeFn extends DoFn<EncryptedEmployee, EncryptedEmployee> {
 
         private static final Logger LOGGER = LoggerFactory.getLogger(WriteEmployeeFn.class);
+        static final String STALE_MESSAGE = "a newer file already loaded this employee_id; the older record is skipped";
 
         private final Counter loaded = IngestionMetrics.counter(IngestionMetrics.RECORDS_LOADED);
         private final Counter loadErrors = IngestionMetrics.counter(IngestionMetrics.LOAD_ERRORS);
+        private final Counter staleRecords = IngestionMetrics.counter(IngestionMetrics.STALE_RECORDS);
         private final DatabaseConfig database;
 
         // Opened once in @Setup, reused for every row.
@@ -71,8 +73,12 @@ public class LoadEmployees extends PTransform<PCollection<EncryptedEmployee>, PC
         public void processElement(@Element EncryptedEmployee row, MultiOutputReceiver out) throws SQLException {
             try {
                 binder.bind(statement, row);
-                statement.executeUpdate();
+                int changed = statement.executeUpdate();
                 connection.commit();
+                if (changed == 0) {
+                    rejectStale(row, out);
+                    return;
+                }
                 loaded.inc();
                 LOGGER.debug("Loaded employee_id={} (record {})", row.employee().getEmployeeId(), row.recordNumber());
                 out.get(LOADED).output(row);
@@ -88,8 +94,18 @@ public class LoadEmployees extends PTransform<PCollection<EncryptedEmployee>, PC
                 LOGGER.warn("Database rejected employee_id={} (record {}): {}",
                         row.employee().getEmployeeId(), row.recordNumber(), exception.getMessage());
                 out.get(FAILED).output(new RecordFailure(row.recordNumber(), row.sourceFile(),
-                        row.executionId(), FailureType.LOAD_ERROR, exception.getMessage(), row.employee()));
+                        row.splitFile(), row.executionId(), FailureType.LOAD_ERROR, exception.getMessage(),
+                        row.employee()));
             }
+        }
+
+        // The upsert changed nothing because the stored row came from a newer file.
+        private void rejectStale(EncryptedEmployee row, MultiOutputReceiver out) {
+            staleRecords.inc();
+            LOGGER.warn("Skipped employee_id={} (record {}): {}", row.employee().getEmployeeId(), row.recordNumber(),
+                    STALE_MESSAGE);
+            out.get(FAILED).output(new RecordFailure(row.recordNumber(), row.sourceFile(), row.splitFile(),
+                    row.executionId(), FailureType.STALE_ERROR, STALE_MESSAGE, row.employee()));
         }
 
         @Teardown

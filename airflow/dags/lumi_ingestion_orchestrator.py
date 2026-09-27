@@ -25,6 +25,9 @@ RUN_ENV = {
     "REQUIRES_SPLIT": "{{ dag_run.conf['requires_split'] | string | lower }}",
     "SPLIT_OUTPUT_DIR": "{{ dag_run.conf['split_output_dir'] }}",
     "ERROR_OUTPUT": "{{ dag_run.conf['error_output'] }}",
+    # What the API saw at request time; Beam fails the run if the files changed since.
+    "FILE_SHA256": "{{ dag_run.conf.get('file_sha256', '') }}",
+    "EXPECTED_RECORD_COUNT": "{{ dag_run.conf.get('expected_record_count', '') }}",
 }
 
 # Retry short hiccups (e.g. a busy scheduler) instead of failing the whole ingestion.
@@ -38,6 +41,8 @@ with DAG(
     schedule=None,  # Only runs when the API triggers it.
     catchup=False,
     max_active_runs=4,
+    # Marks the run FAILED in the database even when Beam was killed and could not do it itself.
+    on_failure_callback=tasks.on_dag_failure,
     tags=["lumi", "ingestion", "beam", "pyspark"],
 ) as dag:
 
@@ -53,6 +58,8 @@ with DAG(
         bash_command=f"bash {SCRIPTS_DIR}/run_pyspark_split.sh ",
         env=RUN_ENV,
         append_env=True,
+        # A stuck Spark job is killed instead of holding a worker slot forever.
+        execution_timeout=timedelta(minutes=30),
     )
 
     skip_pyspark_split = EmptyOperator(task_id="skip_pyspark_split")
@@ -67,11 +74,14 @@ with DAG(
         env=RUN_ENV,
         append_env=True,
         retries=0,
+        # A stuck Beam job is killed; on_dag_failure then marks the run FAILED.
+        execution_timeout=timedelta(hours=1),
     )
 
-    # No retry: the status in the database will not change on a second look.
+    # No retry; ALL_DONE so it also logs the saved reason after Beam fails.
     check_execution_status = PythonOperator(
-        task_id="check_execution_status", python_callable=tasks.check_execution_status, retries=0
+        task_id="check_execution_status", python_callable=tasks.check_execution_status, retries=0,
+        trigger_rule=TriggerRule.ALL_DONE,
     )
 
     finalize = PythonOperator(task_id="finalize", python_callable=tasks.finalize)

@@ -65,6 +65,18 @@ class PipelineIntegrationTest {
                 executionId));
     }
 
+    @Test
+    void duplicateIdFailsTheCountCheckInsteadOfHidingTheLostRow() throws Exception {
+        String row = randomRow();
+        Path csv = writeCsv(row, row);
+
+        assertThrows(RuntimeException.class, () -> IngestionGraphRunner.run(options(csv), run(csv, 2)));
+
+        assertEquals("FAILED", status());
+        assertEquals("DUPLICATE_ERROR", TestDatabase.queryString(
+                "SELECT error_type FROM ingestion_error WHERE execution_id = ?", executionId));
+    }
+
     private Path writeCsv(String... rows) throws Exception {
         Path csv = tempDir.resolve("employees.csv");
         Files.writeString(csv, TestEmployees.CSV_HEADER + "\n" + String.join("\n", rows) + "\n");
@@ -72,7 +84,9 @@ class PipelineIntegrationTest {
     }
 
     private static String randomRow() {
-        return TestEmployees.CSV_ROW.replace("EMP0001", "T" + ThreadLocalRandom.current().nextInt(100000, 999999));
+        String id = "T" + ThreadLocalRandom.current().nextInt(100000, 999999);
+        // Emails are unique in the warehouse, so every generated employee gets its own.
+        return TestEmployees.CSV_ROW.replace("EMP0001", id).replace("arjun.sharma@", id.toLowerCase() + "@");
     }
 
     private IngestionPipelineOptions options(Path csv) {
