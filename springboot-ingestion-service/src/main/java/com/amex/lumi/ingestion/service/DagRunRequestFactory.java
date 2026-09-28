@@ -13,7 +13,6 @@ import static com.amex.lumi.ingestion.client.DagRunConfKeys.CONTROL_FILE;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.ERROR_OUTPUT;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.EXECUTION_ID;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.EXPECTED_RECORD_COUNT;
-import static com.amex.lumi.ingestion.client.DagRunConfKeys.FILE_SHA256;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.FILE_SIZE_BYTES;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.FILE_SIZE_THRESHOLD_BYTES;
 import static com.amex.lumi.ingestion.client.DagRunConfKeys.FILE_TYPE;
@@ -38,7 +37,7 @@ public class DagRunRequestFactory {
     /** Everything the DAG needs to know about one run. */
     public record RunDetails(UUID executionId, Path dataFile, Path controlFile, FileType fileType,
                              long fileSizeBytes, long thresholdBytes, long expectedRecordCount,
-                             boolean requiresSplit, String sha256) {
+                             boolean requiresSplit) {
     }
 
     public AirflowDagRunRequest create(RunDetails run) {
@@ -51,7 +50,6 @@ public class DagRunRequestFactory {
         conf.put(CONTROL_FILE, paths.toAirflowControlPath(run.controlFile()));
         conf.put(EXPECTED_RECORD_COUNT, run.expectedRecordCount());
         conf.put(FILE_SIZE_BYTES, run.fileSizeBytes());
-        conf.put(FILE_SHA256, run.sha256());
         conf.put(FILE_SIZE_THRESHOLD_BYTES, run.thresholdBytes());
         conf.put(REQUIRES_SPLIT, run.requiresSplit());
         // Phase 2: the folder where PySpark writes the split files that Beam then reads.

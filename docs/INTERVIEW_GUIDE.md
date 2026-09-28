@@ -93,9 +93,7 @@ PySpark → **Dataproc**, local folders → **GCS**, PostgreSQL → **BigQuery**
    - `IngestionPathResolver` turns the relative path into a full path and **rejects paths outside `data/`**
      (so `../../secret.txt` cannot be read).
    - `SourceFileValidator` checks the file exists, is readable, not empty, and has the right extension.
-   - `FileChecksum` computes the data file's **sha256** (its fingerprint).
-   - `ControlFileValidator` checks `record_count` exists and is a non-negative number, and, when the control file
-     has them, that `file_name` and `sha256` match the data file (so a control file cannot be paired with the wrong file).
+   - `ControlFileValidator` checks `record_count` exists and is a non-negative number (the control file holds only this).
 4. The service creates the **execution ID** with `UUID.randomUUID()`.
 5. **Split decision**: `fileSize > threshold`. The threshold is in `application.yml` (Phase 2 requirement).
 6. `DagRunRequestFactory` builds `dag_run.conf` with the container paths, the split folder and the error file prefix.
@@ -131,9 +129,7 @@ logging/     RequestLoggingFilter
 Path dataFile = paths.resolveDataFile(request.fileLocation());        // relative -> absolute, must stay inside data/
 Path controlFile = paths.resolveControlFile(request.controlFileLocation());
 long fileSize = sourceFileValidator.validate(dataFile, request.fileLocation(), request.fileType()); // exists, extension, not empty
-String sha256 = FileChecksum.sha256(dataFile);                         // fingerprint now; Beam checks it again later
-long expectedRecords = controlFileValidator.validate(controlFile, request.controlFileLocation(),
-        dataFile.getFileName().toString(), sha256);                    // record_count >= 0, file_name + sha256 match
+long expectedRecords = controlFileValidator.validate(controlFile, request.controlFileLocation()); // record_count >= 0
 
 UUID executionId = UUID.randomUUID();                                  // one ID for the whole run (requirement)
 boolean requiresSplit = fileSize > thresholdBytes;                     // Phase 2: big files are split first
@@ -170,7 +166,7 @@ Beam checks the *records* (is this email valid?). Failing fast in the API saves 
 | Code | When |
 |---|---|
 | 202 | Ingestion accepted |
-| 400 | Bad JSON, missing field, file not found, bad control file, file name / sha256 mismatch, value cannot be decrypted |
+| 400 | Bad JSON, missing field, file not found, bad control file, value cannot be decrypted |
 | 404 | Unknown execution ID, employee or URL |
 | 405 | Wrong HTTP method (e.g. `GET /api/v1/decrypt`) |
 | 415 | Body is not `application/json` |
@@ -218,7 +214,7 @@ IngestionPipelineOptions options = PipelineOptionsFactory.fromArgs(args)
 
 String key = Secrets.resolve(options.getEncryptionKey(), "LUMI_ENCRYPTION_KEY"); // secrets from env, not the command line
 IngestionControl control = new ControlFileReader().read(...); // read record_count BEFORE touching data
-SourceFileCheck.verify(control, file, expectedSha, expectedCount); // file unchanged since the API checked it
+ControlFileReader.checkUnchanged(control, expectedCount);    // control file not edited since the API read it
 DatabaseConfig database = new DatabaseConfig(url, user, pwd);
 RecordCountCheck.RunContext run = new RunContext(executionId, input, expected, Instant.now());
 
@@ -454,7 +450,7 @@ be queried: `SELECT address->>'city' FROM employee`.
 | Split location passed as DAG parameter | `split_output_dir` in `dag_run.conf` |
 | Control file with record_count | `ControlFileValidator` (API), `ControlFileReader` (Beam) |
 | Fail on count mismatch with clear message | `RecordCountCheck` → "control file expected 20 record(s) but 16 were loaded" |
-| Unit tests | 219 tests: 114 Beam, 64 Spring Boot, 25 Airflow, 16 PySpark |
+| Unit tests | 215 tests: 111 Beam, 63 Spring Boot, 25 Airflow, 16 PySpark |
 | Decrypt stored fields | `GET /api/v1/employees/{id}`, `POST /api/v1/decrypt` |
 
 ---
@@ -485,7 +481,6 @@ be queried: `SELECT address->>'city' FROM employee`.
 | 3,000-line generated `airflow.cfg` committed | Ignored; env vars in compose | Generated files don't belong in git |
 | Same `employee_id` twice in a file: random winner | `RejectDuplicateIds`, first record wins | Deterministic result |
 | Re-running an old file overwrote newer data | `source_modified_at` + upsert `WHERE` | Stale data protection |
-| Data file could change between API check and Beam run | sha256 in DAG conf, checked again by Beam | Time-of-check vs time-of-use bug |
 | Key and DB password on the `java` command line | Read from environment (`Secrets`) | Command lines are visible in `ps` and logs |
 | Passwords hard-coded in `docker-compose.yml`, ports open on all interfaces | `.env` variables, ports on `127.0.0.1` | Security |
 | Every error was a plain message | `ErrorCode` + `code` field, 405 / 415 handled | Clients can rely on stable codes |

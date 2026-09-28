@@ -39,7 +39,7 @@ class ContractTest {
     @Test
     void controlFileKeysMatch() {
         assertEquals(strings(CONTRACT.get("control_file_keys")),
-                List.of(ControlFileReader.RECORD_COUNT, ControlFileReader.FILE_NAME, ControlFileReader.SHA256));
+                List.of(ControlFileReader.RECORD_COUNT));
     }
 
     // The API decrypts this same vector, so both encryption codes must agree.

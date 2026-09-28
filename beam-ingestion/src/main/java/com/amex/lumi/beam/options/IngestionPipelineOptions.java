@@ -21,11 +21,6 @@ public interface IngestionPipelineOptions extends PipelineOptions {
 
     void setOriginalFile(String value);
 
-    @Description("sha256 of the original file when the API accepted the request; the run fails if it changed")
-    String getExpectedSha256();
-
-    void setExpectedSha256(String value);
-
     @Description("record_count the API read from the control file; the run fails if the control file changed")
     Long getExpectedRecordCount();
 

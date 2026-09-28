@@ -9,21 +9,16 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
 /**
- * Reads the control file: record_count (required), file_name and sha256 (optional).
+ * Reads the control file, which holds only record_count.
  */
 public class ControlFileReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlFileReader.class);
 
     public static final String RECORD_COUNT = "record_count";
-    public static final String FILE_NAME = "file_name";
-    public static final String SHA256 = "sha256";
-    private static final Pattern SHA256_HEX = Pattern.compile("[0-9a-f]{64}");
 
     public IngestionControl read(String location) {
         if (location == null || location.isBlank()) {
@@ -41,10 +36,17 @@ public class ControlFileReader {
             throw new ControlFileException("Unable to read control file: " + location, exception);
         }
 
-        IngestionControl control = new IngestionControl(recordCount(properties),
-                optional(properties, FILE_NAME), sha256(properties));
+        IngestionControl control = new IngestionControl(recordCount(properties));
         LOGGER.debug("Read {} from {}", control, location);
         return control;
+    }
+
+    /** Fails if record_count differs from what the API read (null skips the check). */
+    public static void checkUnchanged(IngestionControl control, Long countSeenByApi) {
+        if (countSeenByApi != null && countSeenByApi != control.expectedRecordCount()) {
+            throw new ControlFileException("Control file changed after the request: record_count is "
+                    + control.expectedRecordCount() + " but was " + countSeenByApi);
+        }
     }
 
     private static long recordCount(Properties properties) {
@@ -62,22 +64,5 @@ public class ControlFileReader {
             throw new ControlFileException("record_count must not be negative: " + recordCount);
         }
         return recordCount;
-    }
-
-    private static String sha256(Properties properties) {
-        String value = optional(properties, SHA256);
-        if (value == null) {
-            return null;
-        }
-        String hex = value.toLowerCase(Locale.ROOT);
-        if (!SHA256_HEX.matcher(hex).matches()) {
-            throw new ControlFileException("sha256 must be 64 hexadecimal characters");
-        }
-        return hex;
-    }
-
-    private static String optional(Properties properties, String key) {
-        String value = properties.getProperty(key);
-        return value == null || value.isBlank() ? null : value.trim();
     }
 }

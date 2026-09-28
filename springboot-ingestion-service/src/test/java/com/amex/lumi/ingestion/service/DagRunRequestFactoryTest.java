@@ -32,7 +32,7 @@ class DagRunRequestFactoryTest {
         UUID id = UUID.randomUUID();
         AirflowDagRunRequest request = factory().create(new DagRunRequestFactory.RunDetails(id,
                 tempDir.resolve("data/samples/employees.json"), tempDir.resolve("control-files/c.properties"),
-                FileType.JSON, 500, 1, 20, true, "ab12"));
+                FileType.JSON, 500, 1, 20, true));
 
         assertThat(request.dagRunId()).isEqualTo("ingestion_" + id);
         assertThat(request.conf())
@@ -44,13 +44,12 @@ class DagRunRequestFactoryTest {
     }
 
     @Test
-    void sendsElevenParametersIncludingTheFileFingerprint() {
+    void sendsTenParameters() {
         AirflowDagRunRequest request = factory().create(new DagRunRequestFactory.RunDetails(UUID.randomUUID(),
                 tempDir.resolve("data/a.csv"), tempDir.resolve("control-files/c.properties"),
-                FileType.CSV, 10, 100, 1, false, "ab12"));
+                FileType.CSV, 10, 100, 1, false));
 
-        assertThat(request.conf()).hasSize(11)
-                .containsEntry(REQUIRES_SPLIT, false)
-                .containsEntry("file_sha256", "ab12");
+        assertThat(request.conf()).hasSize(10)
+                .containsEntry(REQUIRES_SPLIT, false);
     }
 }

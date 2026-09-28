@@ -5,10 +5,10 @@
     "required": ["execution_id", "input_file", "file_type", "control_file", "requires_split",
                  "split_output_dir", "error_output"],
     "all": ["execution_id", "input_file", "file_type", "control_file", "expected_record_count",
-            "file_size_bytes", "file_sha256", "file_size_threshold_bytes", "requires_split",
+            "file_size_bytes", "file_size_threshold_bytes", "requires_split",
             "split_output_dir", "error_output"]
   },
-  "control_file_keys": ["record_count", "file_name", "sha256"],
+  "control_file_keys": ["record_count"],
   "split_columns": {
     "source_record_number": "source_record_number",
     "corrupt_record": "_corrupt_record"

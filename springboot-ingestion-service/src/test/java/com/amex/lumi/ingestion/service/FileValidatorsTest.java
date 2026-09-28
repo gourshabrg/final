@@ -20,30 +20,6 @@ class FileValidatorsTest {
     private final SourceFileValidator sourceValidator = new SourceFileValidator();
     private final ControlFileValidator controlValidator = new ControlFileValidator();
 
-    private Path data() {
-        return tempDir.resolve("employees.csv");
-    }
-
-    @Test
-    void controlFileMustNameAndFingerprintTheDataFile() throws IOException {
-        Path data = Files.writeString(data(), "employee_id\nEMP0001\n");
-        String sha = FileChecksum.sha256(data);
-        Path good = Files.writeString(tempDir.resolve("good.properties"),
-                "record_count=1\nfile_name=employees.csv\nsha256=" + sha.toUpperCase() + "\n");
-        Path wrongName = Files.writeString(tempDir.resolve("name.properties"), "record_count=1\nfile_name=x.csv\n");
-        Path wrongSha = Files.writeString(tempDir.resolve("sha.properties"),
-                "record_count=1\nsha256=" + "0".repeat(64));
-        Path badSha = Files.writeString(tempDir.resolve("bad.properties"), "record_count=1\nsha256=abc\n");
-
-        assertThat(controlValidator.validate(good, "good.properties", "employees.csv", sha)).isEqualTo(1);
-        assertThatThrownBy(() -> controlValidator.validate(wrongName, "name.properties", "employees.csv", sha))
-                .hasMessage("Control file is for x.csv but the data file is employees.csv");
-        assertThatThrownBy(() -> controlValidator.validate(wrongSha, "sha.properties", "employees.csv", sha))
-                .hasMessageContaining("does not match the sha256");
-        assertThatThrownBy(() -> controlValidator.validate(badSha, "bad.properties", "employees.csv", sha))
-                .hasMessageContaining("64 hexadecimal");
-    }
-
     @Test
     void acceptsCsvAndReturnsSize() throws IOException {
         Path csv = Files.writeString(tempDir.resolve("employees.csv"), "header\n");
@@ -68,7 +44,7 @@ class FileValidatorsTest {
     void readsRecordCountFromControlFile() throws IOException {
         Path control = Files.writeString(tempDir.resolve("c.properties"), "record_count=20\n");
 
-        assertThat(controlValidator.validate(control, "requested.properties", "employees.csv", null)).isEqualTo(20);
+        assertThat(controlValidator.validate(control, "requested.properties")).isEqualTo(20);
     }
 
     @Test
@@ -76,9 +52,9 @@ class FileValidatorsTest {
         Path missing = Files.writeString(tempDir.resolve("a.properties"), "x=1");
         Path text = Files.writeString(tempDir.resolve("b.properties"), "record_count=ten");
 
-        assertThatThrownBy(() -> controlValidator.validate(missing, "a.properties", "employees.csv", null))
+        assertThatThrownBy(() -> controlValidator.validate(missing, "a.properties"))
                 .hasMessageContaining("missing record_count");
-        assertThatThrownBy(() -> controlValidator.validate(text, "b.properties", "employees.csv", null))
+        assertThatThrownBy(() -> controlValidator.validate(text, "b.properties"))
                 .hasMessageContaining("whole number");
     }
 
@@ -100,7 +76,7 @@ class FileValidatorsTest {
     void rejectsNegativeRecordCount() throws IOException {
         Path negative = Files.writeString(tempDir.resolve("n.properties"), "record_count=-5");
 
-        assertThatThrownBy(() -> controlValidator.validate(negative, "n.properties", "employees.csv", null))
+        assertThatThrownBy(() -> controlValidator.validate(negative, "n.properties"))
                 .hasMessageContaining("must not be negative");
     }
 

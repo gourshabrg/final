@@ -8,7 +8,6 @@ import com.amex.lumi.beam.execution.ControlFileException;
 import com.amex.lumi.beam.execution.ControlFileReader;
 import com.amex.lumi.beam.execution.ExecutionStatusRepository;
 import com.amex.lumi.beam.execution.RecordCountCheck;
-import com.amex.lumi.beam.execution.SourceFileCheck;
 import com.amex.lumi.beam.model.IngestionControl;
 import com.amex.lumi.beam.model.IngestionExecution;
 import com.amex.lumi.beam.options.IngestionPipelineOptions;
@@ -19,7 +18,6 @@ import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.TimeZone;
@@ -76,8 +74,7 @@ public final class EmployeeIngestionPipeline {
                                                     ExecutionStatusRepository statusRepository) throws SQLException {
         try {
             IngestionControl control = new ControlFileReader().read(options.getControlFile());
-            SourceFileCheck.verify(control, Path.of(sourceFileOf(options)), options.getExpectedSha256(),
-                    options.getExpectedRecordCount());
+            ControlFileReader.checkUnchanged(control, options.getExpectedRecordCount());
             LOGGER.info("Control file expects {} record(s)", control.expectedRecordCount());
             return control;
         } catch (ControlFileException exception) {

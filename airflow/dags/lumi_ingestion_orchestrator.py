@@ -25,8 +25,7 @@ RUN_ENV = {
     "REQUIRES_SPLIT": "{{ dag_run.conf['requires_split'] | string | lower }}",
     "SPLIT_OUTPUT_DIR": "{{ dag_run.conf['split_output_dir'] }}",
     "ERROR_OUTPUT": "{{ dag_run.conf['error_output'] }}",
-    # What the API saw at request time; Beam fails the run if the files changed since.
-    "FILE_SHA256": "{{ dag_run.conf.get('file_sha256', '') }}",
+    # What the API read at request time; Beam fails the run if the control file changed since.
     "EXPECTED_RECORD_COUNT": "{{ dag_run.conf.get('expected_record_count', '') }}",
 }
 

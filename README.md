@@ -41,7 +41,6 @@ Built as the Amex Lumi readiness case study (Phases 1–3), in a local setup tha
 | **Security** | Phone, salary and emergency phone are encrypted with AES-256-GCM; error records store them redacted |
 | **Partial success** | Bad records go to an error file and table; good records still load |
 | **Duplicates and stale data** | A repeated `employee_id` in one file is rejected (the first one loads); an older file never overwrites newer data |
-| **File fingerprint** | The control file can name the data file and its `sha256`; the file is checked again by Beam, so a file changed after the request fails the run |
 | **Record count check** | Loaded rows are compared with the control file's `record_count`; a mismatch fails the run with a clear reason |
 | **Decryption API** | Returns an employee with sensitive fields decrypted |
 | **Observability** | Run status table, per-step logs tagged with the execution ID, Beam counters summary |
@@ -116,7 +115,7 @@ flowchart LR
 │   └── tests/                      Split job tests
 ├── database/init/                  Warehouse tables, created on first start
 ├── data/samples/                   Sample CSV and JSON files
-├── control-files/                  Sample control files (record_count, file_name, sha256)
+├── control-files/                  Sample control files (record_count)
 ├── contracts/lumi-contract.json    Values all four modules must agree on (checked by each module's tests)
 ├── config/checkstyle/              Java style rules for both Maven modules
 ├── tests/e2e/run_scenarios.py      End-to-end scenario suite (whole platform)
@@ -286,13 +285,7 @@ Rejected records are written to `data/error/execution-<executionId>.txt` and to 
 ### Using your own file
 
 1. Put the data file in `data/` (e.g. `data/input/my_file.csv`).
-2. Create a control file in `control-files/`:
-   ```properties
-   record_count=<number of records>
-   # Optional, but recommended: the run is rejected if the file name or content does not match.
-   file_name=my_file.csv
-   sha256=<64 hex characters, from: sha256sum my_file.csv  or  Get-FileHash my_file.csv>
-   ```
+2. Create a control file in `control-files/` with one line: `record_count=<number of records>`.
 3. Call the API with `fileLocation: "input/my_file.csv"`, your control file name and `fileType` `CSV` or `JSON`.
 
 CSV files need a header row with these columns (order does not matter):
@@ -342,7 +335,7 @@ All errors return the same JSON shape:
 
 | Status | `code` | Meaning |
 |---|---|---|
-| `400` | `INVALID_REQUEST` | Missing or empty file, bad control file, file name or sha256 mismatch, path outside the allowed folders |
+| `400` | `INVALID_REQUEST` | Missing or empty file, bad control file, path outside the allowed folders |
 | `400` | `VALIDATION_FAILED` / `MALFORMED_BODY` / `INVALID_PATH_VALUE` | Missing body field, unreadable JSON body, bad UUID in the URL |
 | `400` | `DECRYPTION_FAILED` | Value that cannot be decrypted |
 | `404` | `NOT_FOUND` / `ENDPOINT_NOT_FOUND` | Unknown execution ID or employee / unknown URL |
@@ -444,12 +437,12 @@ docker exec -it lumi-postgres psql -U airflow -d warehouse
 
 ## Testing
 
-219 automated tests plus an end-to-end scenario suite. Database tests use the Docker warehouse and are **skipped** (not failed) when it is not running.
+215 automated tests plus an end-to-end scenario suite. Database tests use the Docker warehouse and are **skipped** (not failed) when it is not running.
 
 | Module | Tests | Command |
 |---|---|---|
-| Beam | 114 | `cd beam-ingestion && ./mvnw test` |
-| Spring Boot | 64 | `cd springboot-ingestion-service && ./mvnw test` |
+| Beam | 111 | `cd beam-ingestion && ./mvnw test` |
+| Spring Boot | 63 | `cd springboot-ingestion-service && ./mvnw test` |
 | Airflow DAG | 25 | `docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/airflow/tests -v` |
 | PySpark | 16 | `docker exec lumi-airflow-scheduler python -m unittest discover -s /opt/lumi/pyspark/tests -v` |
 
@@ -502,7 +495,6 @@ Each mode runs 60 checks. Run a whole suite in about 10–15 minutes.
 | `Data file does not exist` although the file is there | API started from another folder | Start it from `springboot-ingestion-service`, or set `LUMI_LOCAL_DATA_ROOT` / `LUMI_LOCAL_CONTROL_FILE_ROOT` |
 | API fails at start with "lumi.encryption.key must be 32 bytes in base64 or exactly 32 characters" | Wrong key length in `.env` | Use `openssl rand -base64 32`, or exactly 32 characters |
 | `docker compose` says `Set LUMI_ENCRYPTION_KEY in .env` | `.env` missing | Do step 2 of [Setup](#setup) |
-| Run `FAILED` with "does not match the sha256" | Data file was edited after the control file was made | Recompute `sha256` in the control file |
 | Beam fails with `column "split_file"` / `"source_modified_at" ... does not exist` | Database volume created before these columns were added (`database/init` only runs on an empty volume) | Run the [one-time upgrade](#upgrading-an-existing-database) below, or `docker compose down -v` |
 
 ### Upgrading an existing database

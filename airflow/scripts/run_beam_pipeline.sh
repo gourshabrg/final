@@ -26,9 +26,6 @@ fi
 
 # Only sent by the API; a DAG run started by hand skips these checks.
 EXTRA_ARGS=()
-if [ -n "${FILE_SHA256:-}" ]; then
-    EXTRA_ARGS+=("--expectedSha256=${FILE_SHA256}")
-fi
 if [ -n "${EXPECTED_RECORD_COUNT:-}" ]; then
     EXTRA_ARGS+=("--expectedRecordCount=${EXPECTED_RECORD_COUNT}")
 fi

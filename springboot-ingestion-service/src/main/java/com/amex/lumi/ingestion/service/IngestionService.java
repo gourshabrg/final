@@ -54,10 +54,7 @@ public class IngestionService {
         Path dataFile = paths.resolveDataFile(request.fileLocation());
         Path controlFile = paths.resolveControlFile(request.controlFileLocation());
         long fileSize = sourceFileValidator.validate(dataFile, request.fileLocation(), request.fileType());
-        // Fingerprint taken now; Beam checks it again, so a file changed after this request is detected.
-        String sha256 = FileChecksum.sha256(dataFile);
-        long expectedRecords = controlFileValidator.validate(controlFile, request.controlFileLocation(),
-                dataFile.getFileName().toString(), sha256);
+        long expectedRecords = controlFileValidator.validate(controlFile, request.controlFileLocation());
 
         UUID executionId = UUID.randomUUID();
         // Phase 2: big files are split by PySpark first.
@@ -68,7 +65,7 @@ public class IngestionService {
         try {
             AirflowDagRunRequest dagRun = dagRunRequestFactory.create(new DagRunRequestFactory.RunDetails(
                     executionId, dataFile, controlFile, request.fileType(), fileSize, thresholdBytes,
-                    expectedRecords, requiresSplit, sha256));
+                    expectedRecords, requiresSplit));
 
             LOGGER.info("Ingestion accepted: file={} type={} size={} bytes threshold={} bytes split={}"
                             + " expectedRecords={}",
